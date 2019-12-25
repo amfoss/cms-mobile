@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Login UI',
+      title: 'amFOSS CMS',
       debugShowCheckedModeBanner: false,
       home: LoginScreen(),
     );

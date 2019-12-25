@@ -87,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.black,
                 ),
                 onPressed: () {
-                  // Update the state i.e. toogle the state of passwordVisible variable
                   setState(() {
                     passwordVisible = !passwordVisible;
                   });
