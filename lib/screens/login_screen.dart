@@ -1,3 +1,4 @@
+import 'package:cms_android/screens/home.dart';
 import 'package:cms_android/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -81,9 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
               hintStyle: kHintTextStyle,
               suffixIcon: IconButton(
                 icon: Icon(
-                  passwordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off,
+                  passwordVisible ? Icons.visibility : Icons.visibility_off,
                   color: Colors.black,
                 ),
                 onPressed: () {
@@ -146,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -162,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
             fontFamily: 'OpenSans',
           ),
         ),
+        onPressed: () => Navigator.pop(context)
       ),
     );
   }
@@ -216,6 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Container(
                 height: double.infinity,
+                //TODO: Remove ScrollView
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
