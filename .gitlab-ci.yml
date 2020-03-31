@@ -1,0 +1,30 @@
+image: cirrusci/flutter:stable
+
+stages:
+  - build
+  - analyze
+
+before_script:
+  - flutter pub get
+  - flutter clean
+
+build:apk:
+  stage: build
+  script:
+    - flutter build apk
+  artifacts:
+    paths:
+      - build/app/outputs/apk
+
+build:bundle:
+  stage: build
+  script:
+    - flutter build appbundle
+  artifacts:
+    paths:
+      - build/app/outputs/bundle
+
+analyze:
+  stage: analyze
+  script:
+    - flutter analyze
