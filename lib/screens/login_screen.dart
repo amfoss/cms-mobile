@@ -1,7 +1,8 @@
-import 'package:cms_android/screens/home.dart';
-import 'package:cms_android/utilities/constants.dart';
+import 'package:cms_mobile/screens/home.dart';
+import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,8 +11,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
-  bool passwordVisible = false;
-
+  bool passwordInvisible = true;
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 60.0,
           child: TextField(
             keyboardType: TextInputType.emailAddress,
+            controller: _usernameController,
             style: TextStyle(
               color: Colors.black,
               fontFamily: 'OpenSans',
@@ -47,11 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  @override
-  void initState() {
-    passwordVisible = false;
-  }
-
   Widget _buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            obscureText: passwordVisible,
+            controller: _passwordController,
+            obscureText: passwordInvisible,
             style: TextStyle(
               color: Colors.black,
               fontFamily: 'OpenSans',
@@ -82,12 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
               hintStyle: kHintTextStyle,
               suffixIcon: IconButton(
                 icon: Icon(
-                  passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  passwordInvisible ? Icons.visibility_off : Icons.visibility,
                   color: Colors.black,
                 ),
                 onPressed: () {
                   setState(() {
-                    passwordVisible = !passwordVisible;
+                    passwordInvisible = !passwordInvisible;
                   });
                 },
               ),
@@ -95,20 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        padding: EdgeInsets.only(right: 0.0),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
     );
   }
 
@@ -141,28 +126,62 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginBtn() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.amber,
-        child: Text(
-          'LOGIN',
-          style: TextStyle(
-            color: Colors.black,
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
+        padding: EdgeInsets.symmetric(vertical: 25.0),
+        width: double.infinity,
+        child: RaisedButton(
+          elevation: 5.0,
+          padding: EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
           ),
-        ),
-        onPressed: () => Navigator.pop(context)
-      ),
-    );
+          color: Colors.amber,
+          child: Text(
+            'LOGIN',
+            style: TextStyle(
+              color: Colors.black,
+              letterSpacing: 1.5,
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'OpenSans',
+            ),
+          ),
+          onPressed: () async {
+            final String authMutation = '''
+                        mutation{
+                          tokenAuth(username:"${_usernameController.text}", password:"${_passwordController.text}") {
+                            token
+                            }
+                        }
+                        ''';
+
+            final HttpLink httpLink = HttpLink(
+              uri: 'https://api.amfoss.in/',
+            );
+            GraphQLClient _client = GraphQLClient(
+                link: httpLink,
+                cache: OptimisticCache(
+                    dataIdFromObject: typenameDataIdFromObject));
+            QueryResult result =
+                await _client.mutate(MutationOptions(document: authMutation));
+
+            String token = result.data['tokenAuth']['token'];
+            final AuthLink authLink = AuthLink(
+              getToken: () async => 'JWT $token',
+            );
+            final Link link = authLink.concat(httpLink);
+
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  username: _usernameController.text,
+                  url: link,
+                ),
+              ),
+            );
+          },
+        ));
   }
 
   Widget _buildSignInWithText() {
@@ -173,20 +192,16 @@ class _LoginScreenState extends State<LoginScreen> {
           'Powered by CMS',
           style: kLabelStyle,
         ),
-        Container(
-          margin: EdgeInsets.only(top: 25),
-          child: Text(
-            '<< By the Club | Of the Club | For the Club >>',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
       ],
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,44 +229,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                ),
                 height: double.infinity,
-                //TODO: Remove ScrollView
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'amFOSS CMS',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignInWithText(),
-                    ],
-                  ),
+                                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset('assets/images/amfoss.png', width: MediaQuery.of(context).size.width / 3.5),
+                    SizedBox(height: 30.0),
+                    _buildEmailTF(),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    _buildPasswordTF(),
+                    // TODO: Implement remember me
+                    // _buildRememberMeCheckbox(),
+                    SizedBox(height: 30,),
+                    _buildLoginBtn(),
+                    _buildSignInWithText(),
+                  ],
                 ),
               )
             ],
           ),
         ),
       ),
+      resizeToAvoidBottomPadding: false,
     );
   }
 }

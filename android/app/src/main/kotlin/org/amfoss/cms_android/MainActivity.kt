@@ -1,4 +1,4 @@
-package org.amfoss.cms_android
+package org.amfoss.cms_mobile
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

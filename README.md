@@ -1,4 +1,4 @@
-# cms_android
+# cms_mobile
 
 A new Flutter application for amfoss cms 
 
