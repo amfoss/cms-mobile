@@ -2,7 +2,6 @@ image: cirrusci/flutter:stable
 
 stages:
   - build
-  - analyze
 
 before_script:
   - flutter pub get
@@ -23,8 +22,3 @@ build:bundle:
   artifacts:
     paths:
       - build/app/outputs/bundle
-
-analyze:
-  stage: analyze
-  script:
-    - flutter analyze
