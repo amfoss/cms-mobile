@@ -5,26 +5,35 @@ class Profile extends StatefulWidget {
   final String username;
 
   const Profile({this.username});
+
   @override
   _Profile createState() => _Profile(username);
 }
 
 class _Profile extends State<Profile> {
   final String username;
+
   _Profile(this.username);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Query(
-        options: QueryOptions(documentNode: gql('''
+        options: QueryOptions(
+          documentNode: gql('''
                               query {
                                 user(username: "$username"){
-                                  firstName
-                                  username
+                                  admissionYear                                
+                                  isMembershipActive                                
                                 }
+                                profile(username: "$username"){
+    															fullName
+                                  email
+                                  githubUsername                                
+                                }                              
                               }
-                              '''),),
+                              '''),
+        ),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.loading) {
@@ -42,29 +51,83 @@ class _Profile extends State<Profile> {
   }
 
   Widget _profileView(QueryResult result) {
-    final nameList = result.data['user'];
+    final nameList = result.data['profile'];
 
-    return Container(
-        padding: EdgeInsets.only(left: 20, right: 20),
-        child: Center(
-            child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 170, bottom: 20),
-              child: CircleAvatar(
-                radius: 70,
-                backgroundColor: Colors.grey,
-                backgroundImage: NetworkImage(
-                    'https://avatars.githubusercontent.com/${nameList['username']}'),
+    return new Container(
+        margin: const EdgeInsets.only(left: 15, right: 20),
+        child: new Column(children: <Widget>[
+          new Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Container(
+                margin: EdgeInsets.only(top: 40, bottom: 20, right: 20),
+                child: new CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(
+                      'https://avatars.githubusercontent.com/${nameList['githubUsername']}'),
+                ),
               ),
-            ),
-            Text(
-              '@${nameList['username']}',
-              style: TextStyle(
-                fontSize: 27,
-              ),
-            ),
-          ],
-        )));
+              new Container(
+                margin: EdgeInsets.only(top: 50, bottom: 20),
+                child: new Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Text('${nameList['fullName']}',
+                        style: Theme.of(context).textTheme.headline),
+                    new Container(
+                      margin: const EdgeInsets.only(top: 5.0),
+                      child: new Text('@${nameList['githubUsername']}',
+                          style: Theme.of(context).textTheme.subtitle),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          Divider(color: Colors.black),
+          _details(result),
+        ]));
+  }
+
+  Widget _details(QueryResult result) {
+    final nameList = result.data['profile'];
+    final detailsList = result.data['user'];
+
+    String membership =
+        (detailsList['isMembershipActive']) ? "Active" : "Suspended";
+    ;
+    return Expanded(
+        child: ListView(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.account_circle),
+          title: Text(
+            'CMS Username: $username',
+          ),
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.mail),
+          title: Text(
+            'Email ID: ${nameList['email']}',
+          ),
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.calendar_today),
+          title: Text(
+            'Admission Year: ${detailsList['admissionYear']}',
+          ),
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(Icons.assessment),
+          title: Text(
+            'Membership Status: $membership',
+          ),
+        ),
+      ],
+    ));
   }
 }
