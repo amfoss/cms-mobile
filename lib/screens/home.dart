@@ -7,7 +7,9 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class HomePage extends StatefulWidget {
   final Link url;
   final String username;
+
   const HomePage({Key key, this.username, this.url}) : super(key: key);
+
   @override
   _HomePage createState() => _HomePage();
 }
@@ -15,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [Attendance(), Profile(), StatusUpdate()];
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _children = [
@@ -33,19 +36,29 @@ class _HomePage extends State<HomePage> {
       client: client,
       child: Scaffold(
         body: _children[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.playlist_add_check),
-              title: Text("Attendance"),
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text("Profile")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.check_box), title: Text("Status")),
-          ],
-          onTap: onTabTapped,
+        bottomNavigationBar: StreamBuilder(
+          stream: null,
+          builder: (context, snapshot) {
+            return BottomNavigationBar(
+              fixedColor: Colors.blueAccent,
+              currentIndex: _currentIndex,
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.playlist_add_check),
+                  title: Text("Attendance"),
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    title: Text("Profile")
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.check_box),
+                    title: Text("Status Update")
+                ),
+              ],
+              onTap: onTabTapped,
+            );
+          }
         ),
       ),
     );

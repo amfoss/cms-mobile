@@ -8,16 +8,22 @@ class Attendance extends StatefulWidget {
 }
 
 class _Attendance extends State<Attendance> {
-    final String query = '''
+
+  final String query = '''
                       query {
-                        dailyAttendance(date:"${DateFormat("yyyy-MM-dd").format(DateTime.now())}"){
-                          date
-                          membersPresent{
-                            member{
-                              username
-                            }
-                          }
-                        }
+                      dailyAttendance(date: "${DateFormat("yyyy-MM-dd").format(DateTime.now())}") {
+                                date
+                                membersPresent {
+                                  member {
+                                    username
+                                    fullName
+                                    avatar {
+                                      githubUsername
+                                    }
+                                  }
+                                  duration
+                                }
+                              }
                       }''';
 
   @override
@@ -38,22 +44,35 @@ class _Attendance extends State<Attendance> {
             );
           }
           print(result.data['dailyAttendance']['membersPresent'][0]);
-          // if (result.data[0] == [])
-            return _attendanceList(result);
+          return _attendanceList(result);
         },
       ),
     );
   }
-Widget _attendanceList(QueryResult result) {
+
+  Widget _attendanceList(QueryResult result) {
     final attendance = result.data['dailyAttendance'];
+    final membersPresent = attendance['membersPresent'];
     return ListView.separated(
-        primary: false,
+        itemCount: membersPresent.length,
         itemBuilder: (context, index) {
+          String url = attendance['membersPresent'][index]['member']['avatar']['githubUsername'];
+          if (url == null) {
+            url = 'github';
+          }
           return ListTile(
-            title: Text(attendance['membersPresent'][index]['member']['username']),
+            leading: new CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.grey,
+              backgroundImage: NetworkImage(
+                  'https://avatars.githubusercontent.com/' + url),
+            ),
+            title: Text(
+                attendance['membersPresent'][index]['member']['fullName']),
+            subtitle: Text(
+                "duration: " + attendance['membersPresent'][index]['duration']),
           );
         },
-        separatorBuilder: (context, index) => Divider(),
-        itemCount: 5);
+        separatorBuilder: (context, index) => Divider());
   }
 }
