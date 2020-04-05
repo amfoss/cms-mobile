@@ -1,9 +1,8 @@
-import 'package:cms_mobile/screens/attendance.dart';
 import 'package:cms_mobile/screens/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-
 import 'statusUpdate/status_update.dart';
+import 'attendence/attendence.dart';
 
 class HomePage extends StatefulWidget {
   final Link url;

@@ -2,24 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 
-class Attendance extends StatefulWidget {
+// ignore: must_be_immutable
+class MembersAbsent extends StatefulWidget {
+  DateTime selectedDate;
+
+  MembersAbsent(DateTime selectedDate) {
+    this.selectedDate = selectedDate;
+  }
+
   @override
-  _Attendance createState() => _Attendance();
+  AttendanceAbsent createState() => AttendanceAbsent(selectedDate);
 }
 
-class _Attendance extends State<Attendance> {
-  DateTime selectedDate = DateTime.now();
+class AttendanceAbsent extends State<MembersAbsent> {
+  DateTime selectedDate;
+
+  AttendanceAbsent(DateTime selectedDate) {
+    this.selectedDate = selectedDate;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        title: new Text("Attendence: ${DateFormat("yyyy-MM-dd").format(selectedDate)}"),
-        leading: new IconButton(
-          icon: new Icon(Icons.calendar_today),
-          onPressed: () => _selectDate(context),
-        ),
-      ),
       body: Query(
         options: QueryOptions(documentNode: gql(_buildQuery())),
         builder: (QueryResult result,
@@ -34,7 +38,7 @@ class _Attendance extends State<Attendance> {
               child: Text('Attendance not found'),
             );
           }
-          print(result.data['dailyAttendance']['membersPresent'][0]);
+          print(result.data['dailyAttendance']['membersAbsent'][0]);
           return _attendanceList(result);
         },
       ),
@@ -43,11 +47,11 @@ class _Attendance extends State<Attendance> {
 
   Widget _attendanceList(QueryResult result) {
     final attendance = result.data['dailyAttendance'];
-    final membersPresent = attendance['membersPresent'];
+    final membersAbsent = attendance['membersAbsent'];
     return ListView.separated(
-        itemCount: membersPresent.length,
+        itemCount: membersAbsent.length,
         itemBuilder: (context, index) {
-          String url = attendance['membersPresent'][index]['member']['avatar']
+          String url = attendance['membersAbsent'][index]['member']['avatar']
               ['githubUsername'];
           if (url == null) {
             url = 'github';
@@ -60,25 +64,10 @@ class _Attendance extends State<Attendance> {
                   NetworkImage('https://avatars.githubusercontent.com/' + url),
             ),
             title:
-                Text(attendance['membersPresent'][index]['member']['fullName']),
-            subtitle: Text(
-                "duration: " + attendance['membersPresent'][index]['duration']),
+                Text(attendance['membersAbsent'][index]['member']['fullName']),
           );
         },
         separatorBuilder: (context, index) => Divider());
-  }
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2018, 1),
-        lastDate: DateTime.now());
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-    build(context);
   }
 
   String _buildQuery() {
@@ -86,7 +75,7 @@ class _Attendance extends State<Attendance> {
                       query {
                       dailyAttendance(date: "${DateFormat("yyyy-MM-dd").format(selectedDate)}") {
                                 date
-                                membersPresent {
+                                membersAbsent {
                                   member {
                                     username
                                     fullName
@@ -94,7 +83,6 @@ class _Attendance extends State<Attendance> {
                                       githubUsername
                                     }
                                   }
-                                  duration
                                 }
                               }
                       }''';
