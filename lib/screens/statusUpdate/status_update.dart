@@ -1,3 +1,4 @@
+import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,7 +33,7 @@ class _StatusUpdateScreen extends State<StatusUpdate>
     return Scaffold(
       appBar: new AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: appPrimaryColor,
         title: new Text(
             "Status update: ${DateFormat("yyyy-MM-dd").format(selectedDate)}"),
         leading: new IconButton(

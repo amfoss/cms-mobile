@@ -1,4 +1,5 @@
 import 'package:cms_mobile/screens/profile/profile.dart';
+import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'statusUpdate/status_update.dart';
@@ -40,7 +41,7 @@ class _HomePage extends State<HomePage> {
             stream: null,
             builder: (context, snapshot) {
               return BottomNavigationBar(
-                fixedColor: Colors.blueAccent,
+                fixedColor: appPrimaryColor,
                 currentIndex: _currentIndex,
                 items: [
                   BottomNavigationBarItem(

@@ -5,6 +5,8 @@ final kHintTextStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
+final appPrimaryColor = Color(0xFFFFA538);
+
 final kLabelStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
