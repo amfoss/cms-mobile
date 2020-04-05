@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'members_didnot_sent.dart' as memberDidNotSend;
 import 'members_sent.dart' as membersSent;
 
 class StatusUpdate extends StatefulWidget {
   @override
-  _StatusUpdate createState() => _StatusUpdate();
+  _StatusUpdateScreen createState() => _StatusUpdateScreen();
 }
 
-class _StatusUpdate extends State<StatusUpdate>
+class _StatusUpdateScreen extends State<StatusUpdate>
     with SingleTickerProviderStateMixin {
   TabController tabController;
+  static final now = DateTime.now();
+  DateTime selectedDate = DateTime(now.year,now.month,now.day-1);
 
   @override
   void initState() {
@@ -30,7 +33,12 @@ class _StatusUpdate extends State<StatusUpdate>
       appBar: new AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.blueAccent,
-        title: Text("Status Update"),
+        title: new Text(
+            "Status update: ${DateFormat("yyyy-MM-dd").format(selectedDate)}"),
+        leading: new IconButton(
+          icon: new Icon(Icons.calendar_today),
+          onPressed: () => _selectDate(context),
+        ),
         bottom: new TabBar(
           controller: tabController,
           tabs: <Widget>[
@@ -48,10 +56,27 @@ class _StatusUpdate extends State<StatusUpdate>
       body: new TabBarView(
         controller: tabController,
         children: <Widget>[
-          new membersSent.MembersSent(),
-          new memberDidNotSend.MembersDidNotSend(),
+          new membersSent.MembersSentTab(_getDate()).build(context),
+          new memberDidNotSend.MemberDidNotSendTab(_getDate()).build(context),
         ],
       ),
     );
+  }
+
+  String _getDate() {
+    return selectedDate.toIso8601String();
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2018, 1),
+        lastDate: DateTime.now());
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+    build(context);
   }
 }

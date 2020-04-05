@@ -2,32 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MembersDidNotSend extends StatefulWidget {
+  String selectedDate;
+
+  MembersDidNotSend(this.selectedDate);
+
   @override
-  _MemberDidNotSend createState() => _MemberDidNotSend();
+  MemberDidNotSendTab createState() => MemberDidNotSendTab(selectedDate);
 }
 
-class _MemberDidNotSend extends State<MembersDidNotSend> {
-  final String query = '''
-                      query {
-                        dailyStatusUpdates(date: "2020-04-04") {
-                                  date
-                                  memberDidNotSend {
-                                    member {
-                                      username
-                                      fullName
-                                      avatar{
-                                        githubUsername
-                                      }
-                                    }
-                                  }
-                                }
-                      }''';
+class MemberDidNotSendTab extends State<MembersDidNotSend> {
+  String selectedDate;
+
+  MemberDidNotSendTab(this.selectedDate);
 
   @override
   Widget build(BuildContext context) {
+    selectedDate = selectedDate.substring(0, 10);
     return Scaffold(
       body: Query(
-        options: QueryOptions(documentNode: gql(query)),
+        options: QueryOptions(documentNode: gql(_buildQuery())),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.loading) {
@@ -38,6 +31,11 @@ class _MemberDidNotSend extends State<MembersDidNotSend> {
           if (result.data == null) {
             return Center(
               child: Text('Status Update not found'),
+            );
+          }
+          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length == 0) {
+            return Center(
+              child: Text('Everyone Sent their Status Update'),
             );
           }
           print(result.data['dailyStatusUpdates']['memberDidNotSend'][0]);
@@ -73,5 +71,23 @@ class _MemberDidNotSend extends State<MembersDidNotSend> {
           );
         },
         separatorBuilder: (context, index) => Divider());
+  }
+
+  String _buildQuery() {
+    return '''
+                      query {
+                        dailyStatusUpdates(date: "$selectedDate") {
+                                  date
+                                  memberDidNotSend {
+                                    member {
+                                      username
+                                      fullName
+                                      avatar{
+                                        githubUsername
+                                      }
+                                    }
+                                  }
+                                }
+                      }''';
   }
 }

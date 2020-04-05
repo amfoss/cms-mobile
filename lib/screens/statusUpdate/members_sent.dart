@@ -2,32 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MembersSent extends StatefulWidget {
+  final String slectedDate;
+
+  const MembersSent(this.slectedDate);
+
   @override
-  _MembersSent createState() => _MembersSent();
+  MembersSentTab createState() => MembersSentTab(slectedDate);
 }
 
-class _MembersSent extends State<MembersSent> {
-  final String query = '''
-                      query {
-                        dailyStatusUpdates(date: "2020-04-04") {
-                                  date
-                                  membersSent {
-                                    member {
-                                      username
-                                      fullName
-                                      avatar{
-                                        githubUsername
-                                      }
-                                    }
-                                  }
-                                }
-                      }''';
+class MembersSentTab extends State<MembersSent> {
+  String selctedDate;
+
+  MembersSentTab(this.selctedDate);
 
   @override
   Widget build(BuildContext context) {
+    selctedDate = selctedDate.substring(0, 10);
     return Scaffold(
       body: Query(
-        options: QueryOptions(documentNode: gql(query)),
+        options: QueryOptions(documentNode: gql(_buildQuery())),
         builder: (QueryResult result,
             {VoidCallback refetch, FetchMore fetchMore}) {
           if (result.loading) {
@@ -40,6 +33,12 @@ class _MembersSent extends State<MembersSent> {
               child: Text('Status Update not found'),
             );
           }
+          if (result.data['dailyStatusUpdates']['membersSent'].length == 0) {
+            return Center(
+              child: Text('No one Sent Status Update'),
+            );
+          }
+          print(selctedDate);
           print(result.data['dailyStatusUpdates']['membersSent'][0]);
           return _membersSentList(result);
         },
@@ -72,5 +71,28 @@ class _MembersSent extends State<MembersSent> {
           );
         },
         separatorBuilder: (context, index) => Divider());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  String _buildQuery() {
+    return '''
+                query {
+                        dailyStatusUpdates(date: "$selctedDate") {
+                                  date
+                                  membersSent {
+                                    member {
+                                      username
+                                      fullName
+                                      avatar{
+                                        githubUsername
+                                      }
+                                    }
+                                  }
+                                }
+                      }''';
   }
 }
