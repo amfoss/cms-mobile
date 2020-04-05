@@ -39,6 +39,11 @@ class AttendancePresent extends State<MembersPresent> {
               child: Text('Attendance not found'),
             );
           }
+          if (result.data['dailyAttendance']['membersPresent'].length == 0) {
+            return Center(
+              child: Text('Oops!\nLooks like no one is present'),
+            );
+          }
           print(result.data['dailyAttendance']['membersPresent'][0]);
           return _attendanceList(result);
         },

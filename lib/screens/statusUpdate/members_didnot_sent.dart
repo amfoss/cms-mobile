@@ -38,6 +38,11 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
               child: Text('Everyone Sent their Status Update'),
             );
           }
+          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length == 0) {
+            return Center(
+              child: Text('Woohoo!\nEveryone sent an update today.'),
+            );
+          }
           print(result.data['dailyStatusUpdates']['memberDidNotSend'][0]);
           return _membersSentList(result);
         },

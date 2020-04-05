@@ -35,7 +35,7 @@ class MembersSentTab extends State<MembersSent> {
           }
           if (result.data['dailyStatusUpdates']['membersSent'].length == 0) {
             return Center(
-              child: Text('No one Sent Status Update'),
+              child: Text('No one a sent status update yet'),
             );
           }
           print(selctedDate);

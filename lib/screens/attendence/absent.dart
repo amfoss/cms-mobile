@@ -38,6 +38,11 @@ class AttendanceAbsent extends State<MembersAbsent> {
               child: Text('Attendance not found'),
             );
           }
+          if (result.data['dailyAttendance']['membersAbsent'].length == 0) {
+            return Center(
+              child: Text('Woohoo!\nLooks like every one is present'),
+            );
+          }
           print(result.data['dailyAttendance']['membersAbsent'][0]);
           return _attendanceList(result);
         },
