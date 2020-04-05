@@ -1,8 +1,9 @@
 import 'package:cms_mobile/screens/attendance.dart';
 import 'package:cms_mobile/screens/profile/profile.dart';
-import 'package:cms_mobile/screens/status_update.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+import 'statusUpdate/status_update.dart';
 
 class HomePage extends StatefulWidget {
   final Link url;
@@ -37,29 +38,25 @@ class _HomePage extends State<HomePage> {
       child: Scaffold(
         body: _children[_currentIndex],
         bottomNavigationBar: StreamBuilder(
-          stream: null,
-          builder: (context, snapshot) {
-            return BottomNavigationBar(
-              fixedColor: Colors.blueAccent,
-              currentIndex: _currentIndex,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.playlist_add_check),
-                  title: Text("Attendance"),
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    title: Text("Profile")
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.check_box),
-                    title: Text("Status Update")
-                ),
-              ],
-              onTap: onTabTapped,
-            );
-          }
-        ),
+            stream: null,
+            builder: (context, snapshot) {
+              return BottomNavigationBar(
+                fixedColor: Colors.blueAccent,
+                currentIndex: _currentIndex,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.playlist_add_check),
+                    title: Text("Attendance"),
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.person), title: Text("Profile")),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.check_box),
+                      title: Text("Status Update")),
+                ],
+                onTap: onTabTapped,
+              );
+            }),
       ),
     );
   }
