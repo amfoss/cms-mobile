@@ -40,9 +40,12 @@ dependency_overrides:
 
 flutter_icons:
   #replace with the path to the icon whenever updating it
-  image_path: "/home/yashk2000/icon.png"
   android: true
   ios: true
+  image_path_ios: "assets/launcher/icon.png"
+  image_path_android: "assets/launcher/icon.png"
+  adaptive_icon_background: "assets/launcher/background.png"
+  adaptive_icon_foreground: "assets/launcher/foreground.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
