@@ -25,10 +25,13 @@ dependencies:
   cupertino_icons: ^0.1.2
   graphql_flutter: ^3.0.1-beta.1
   intl: ^0.16.1
+  moor_flutter: ^2.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  moor_generator: ^2.4.0
+  build_runner:
 
   flutter_launcher_icons: "^0.6.1"
 

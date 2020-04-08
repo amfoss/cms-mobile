@@ -63,6 +63,8 @@ samples, guidance on mobile development, and a full API reference.
 
 [intl](https://pub.dev/packages/intl): 0.16.1
 
+[moor_flutter](https://pub.dev/packages/moor_flutter): 2.1.1
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 
