@@ -18,17 +18,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   int _currentIndex = 0;
-  final List<Widget> _children = [Attendance(), Profile(), StatusUpdate()];
+  final List<Widget> _children = [Attendance(), StatusUpdate(), Profile()];
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     final List<Widget> _children = [
       Attendance(),
+      StatusUpdate(),
       Profile(
         username: widget.username,
-      ),
-      StatusUpdate()
+      )
     ];
 
     final ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
@@ -51,10 +51,10 @@ class _HomePage extends State<HomePage> {
                     title: Text("Attendance"),
                   ),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.person), title: Text("Profile")),
-                  BottomNavigationBarItem(
                       icon: Icon(Icons.check_box),
                       title: Text("Status Update")),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.person), title: Text("Profile"))
                 ],
                 onTap: onTabTapped,
               );
