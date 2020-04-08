@@ -15,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool passwordInvisible = true;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
+              contentPadding:
+                  EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.account_circle,
                 color: Colors.black,
@@ -73,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
+              contentPadding:
+                  EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.lock,
                 color: Colors.black,
@@ -140,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'LOGIN',
             style: TextStyle(
               color: Colors.black,
-              letterSpacing: SizeConfig. widthFactor * 1.5,
+              letterSpacing: SizeConfig.widthFactor * 1.5,
               fontSize: SizeConfig.widthFactor * 18.0,
               fontWeight: FontWeight.bold,
               fontFamily: 'OpenSans',
@@ -171,8 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             final Link link = authLink.concat(httpLink);
 
-            Navigator.pop(context);
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => HomePage(
@@ -203,6 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _usernameController.dispose();
     _passwordController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -235,10 +238,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   horizontal: SizeConfig.widthFactor * 40.0,
                 ),
                 height: double.infinity,
-                                child: Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset('assets/images/amfoss.png', width: SizeConfig.widthFactor / 3.5),
+                    Image.asset('assets/images/amfoss.png',
+                        width: SizeConfig.widthFactor / 3.5),
                     SizedBox(height: SizeConfig.heightFactor * 30.0),
                     _buildEmailTF(),
                     SizedBox(
@@ -247,7 +251,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildPasswordTF(),
                     // TODO: Implement remember me
                     // _buildRememberMeCheckbox(),
-                    SizedBox(height: SizeConfig.heightFactor * 30,),
+                    SizedBox(
+                      height: SizeConfig.heightFactor * 30,
+                    ),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                   ],
