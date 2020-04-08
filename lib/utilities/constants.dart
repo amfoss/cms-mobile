@@ -1,3 +1,4 @@
+import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 
 final kHintTextStyle = TextStyle(
@@ -15,11 +16,11 @@ final kLabelStyle = TextStyle(
 
 final kBoxDecorationStyle = BoxDecoration(
   color: Colors.black12,
-  borderRadius: BorderRadius.circular(10.0),
+  borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 10.0),
   boxShadow: [
     BoxShadow(
       color: Colors.white,
-      blurRadius: 6.0,
+      blurRadius: SizeConfig.aspectRation * 6.0,
       offset: Offset(0, 2),
     ),
   ],

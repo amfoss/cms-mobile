@@ -1,5 +1,6 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -22,11 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
           'Username',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: SizeConfig.heightFactor * 60.0,
           child: TextField(
             keyboardType: TextInputType.emailAddress,
             controller: _usernameController,
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.account_circle,
                 color: Colors.black,
@@ -58,11 +59,11 @@ class _LoginScreenState extends State<LoginScreen> {
           'Password',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: SizeConfig.heightFactor * 60.0,
           child: TextField(
             controller: _passwordController,
             obscureText: passwordInvisible,
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.lock,
                 color: Colors.black,
@@ -99,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildRememberMeCheckbox() {
     return Container(
-      height: 20.0,
+      height: SizeConfig.heightFactor * 20.0,
       child: Row(
         children: <Widget>[
           Theme(
@@ -126,21 +127,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLoginBtn() {
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 25.0),
+        padding: EdgeInsets.symmetric(vertical: SizeConfig.heightFactor * 25.0),
         width: double.infinity,
         child: RaisedButton(
-          elevation: 5.0,
-          padding: EdgeInsets.all(15.0),
+          elevation: SizeConfig.widthFactor * 5.0,
+          padding: EdgeInsets.all(SizeConfig.aspectRation * 15.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 30.0),
           ),
           color: Colors.amber,
           child: Text(
             'LOGIN',
             style: TextStyle(
               color: Colors.black,
-              letterSpacing: 1.5,
-              fontSize: 18.0,
+              letterSpacing: SizeConfig. widthFactor * 1.5,
+              fontSize: SizeConfig.widthFactor * 18.0,
               fontWeight: FontWeight.bold,
               fontFamily: 'OpenSans',
             ),
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildSignInWithText() {
     return Column(
       children: <Widget>[
-        SizedBox(height: 20.0),
+        SizedBox(height: SizeConfig.heightFactor * 20.0),
         Text(
           'Powered by CMS',
           style: kLabelStyle,
@@ -204,6 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -230,22 +232,22 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 40.0,
+                  horizontal: SizeConfig.widthFactor * 40.0,
                 ),
                 height: double.infinity,
                                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset('assets/images/amfoss.png', width: MediaQuery.of(context).size.width / 3.5),
-                    SizedBox(height: 30.0),
+                    Image.asset('assets/images/amfoss.png', width: SizeConfig.widthFactor / 3.5),
+                    SizedBox(height: SizeConfig.heightFactor * 30.0),
                     _buildEmailTF(),
                     SizedBox(
-                      height: 30.0,
+                      height: SizeConfig.heightFactor * 30.0,
                     ),
                     _buildPasswordTF(),
                     // TODO: Implement remember me
                     // _buildRememberMeCheckbox(),
-                    SizedBox(height: 30,),
+                    SizedBox(height: SizeConfig.heightFactor * 30,),
                     _buildLoginBtn(),
                     _buildSignInWithText(),
                   ],

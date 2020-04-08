@@ -1,5 +1,6 @@
 import 'package:cms_mobile/screens/profile/profile.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'statusUpdate/status_update.dart';
@@ -21,6 +22,7 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     final List<Widget> _children = [
       Attendance(),
       Profile(
