@@ -193,9 +193,30 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: SizeConfig.heightFactor * 20.0),
         Text(
           'Powered by CMS',
-          style: kLabelStyle,
+          style: CMSLabelStyle,
         ),
       ],
+    );
+  }
+
+  Widget _buildFromText() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 60),
+      child: Text(
+        'From',
+        style: kLabelStyle,
+      ),
+    );
+  }
+
+  Widget _buildSignInWithLogo() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Image.asset(
+        'assets/images/amfoss.jpg',
+        width: SizeConfig.screenWidth / 2.5,
+        alignment: Alignment.bottomCenter,
+      ),
     );
   }
 
@@ -216,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
+              _buildSignInWithLogo(),
               Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -241,8 +263,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Image.asset('assets/images/amfoss.png',
-                        width: SizeConfig.widthFactor / 3.5),
                     SizedBox(height: SizeConfig.heightFactor * 30.0),
                     _buildEmailTF(),
                     SizedBox(
@@ -258,7 +278,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildSignInWithText(),
                   ],
                 ),
-              )
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildFromText(),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildSignInWithLogo(),
+              ),
             ],
           ),
         ),
