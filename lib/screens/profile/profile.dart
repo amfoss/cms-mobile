@@ -2,6 +2,8 @@ import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../../utilities/constants.dart';
+
 class Profile extends StatefulWidget {
   final String username;
 
@@ -19,6 +21,18 @@ class _Profile extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: appPrimaryColor,
+          title: const Text('Profile'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.info),
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => About()));
+              },
+            ),
+          ]),
       body: Query(
         options: QueryOptions(
           documentNode: gql('''
@@ -60,7 +74,7 @@ class _Profile extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Container(
-                margin: EdgeInsets.only(top: 40, bottom: 20, right: 20),
+                margin: EdgeInsets.only(top: 10, bottom: 20, right: 20),
                 child: new CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.grey,
@@ -69,7 +83,7 @@ class _Profile extends State<Profile> {
                 ),
               ),
               new Container(
-                margin: EdgeInsets.only(top: 50, bottom: 20),
+                margin: EdgeInsets.only(top: 20, bottom: 20),
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -87,19 +101,6 @@ class _Profile extends State<Profile> {
           ),
           Divider(color: Colors.black),
           _details(result),
-          Expanded(
-            child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: ListTile(
-                leading: Icon(Icons.info),
-                onTap: () => [
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => About()))
-                ],
-                title: Text("About"),
-              ),
-            ),
-          ),
         ]));
   }
 

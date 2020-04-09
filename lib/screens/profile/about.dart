@@ -3,6 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../utilities/sizeconfig.dart';
+
 class About extends StatefulWidget {
   @override
   _AboutScreen createState() => _AboutScreen();
@@ -15,53 +17,79 @@ class _AboutScreen extends State<About> {
       appBar: AppBar(backgroundColor: appPrimaryColor, title: Text("About")),
       body: Column(
         children: <Widget>[
-          amfossLogo(),
-          SizedBox(height: 50),
-          aboutApp(),
-          SizedBox(
-            height: 50,
-          ),
-          links('This app is opensource you can find it, ', "here",
+          _appIcon(),
+          _amFOSSLogo(),
+          _aboutText(
+              "This is a flutter application for the amFOSS CMS. Club members can login into the CMS using the app and view club attendence, their profile and status updates.",
+              null,
+              null),
+          _aboutText(
+              "amFOSS is a student-run community with over 50+ members from Amrita Vishwa Vidyapeetham, Amritapuri. Know more about us ",
+              "here",
+              "https://amfoss.in"),
+          _links(Icons.code, 'The app is open source, with the code ', "here",
               "https://gitlab.com/amfoss/cms-mobile"),
-          SizedBox(
-            height: 15,
-          ),
-          links("If you find any issues please open it, ", "here",
+          _links(Icons.error, "Issues can be reported ", "here",
               "https://gitlab.com/amfoss/cms-mobile/-/issues"),
-          SizedBox(
-            height: 15,
-          ),
-          links("You can find the developers of this app, ", "here",
+          _links(Icons.person_outline, "App developers can be found ", "here",
               "https://gitlab.com/amfoss/cms-mobile/-/graphs/master")
         ],
       ),
     );
   }
 
-  Widget amfossLogo() {
+  Widget _appIcon() {
     return Container(
-        padding: EdgeInsets.only(top: 30),
-        child: Image.asset('assets/images/amfoss.jpg'));
+      padding: EdgeInsets.only(top: 10),
+      child: Image.asset('assets/launcher/icon.png'),
+      height: SizeConfig.heightFactor * 150,
+    );
   }
 
-  Widget aboutApp() {
-    return Text("// about app");
+  Widget _amFOSSLogo() {
+    return Container(
+      padding: EdgeInsets.only(top: 10, bottom: 20),
+      child: Image.asset('assets/images/amfoss.jpg'),
+      width: SizeConfig.screenWidth / 2.5,
+    );
   }
 
-  Widget links(String normalText, String richText, String url) {
-    return Container(
-      alignment: Alignment.topLeft,
-      padding: EdgeInsets.only(left: 5),
-      child: new RichText(
+  Widget _aboutText(String normalText, String richText, String url) {
+    return ListTile(
+      title: new RichText(
         text: new TextSpan(
           children: [
             new TextSpan(
               text: normalText,
-              style: new TextStyle(color: Colors.black, fontSize: 16),
+              style: new TextStyle(color: Colors.black, fontSize: 14),
             ),
             new TextSpan(
               text: richText,
-              style: new TextStyle(color: Colors.blue, fontSize: 16),
+              style: new TextStyle(color: Colors.blue, fontSize: 14),
+              recognizer: new TapGestureRecognizer()
+                ..onTap = () {
+                  _launchURL(url);
+                },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _links(IconData icon, String normalText, String richText, String url) {
+    return ListTile(
+      leading: Icon(icon),
+      title: new RichText(
+        text: new TextSpan(
+          children: [
+            new TextSpan(
+              text: normalText,
+              style: new TextStyle(color: Colors.black, fontSize: 14),
+            ),
+            new TextSpan(
+              text: richText,
+              style: new TextStyle(color: Colors.blue, fontSize: 14),
               recognizer: new TapGestureRecognizer()
                 ..onTap = () {
                   _launchURL(url);
