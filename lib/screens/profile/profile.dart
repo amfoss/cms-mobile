@@ -1,3 +1,4 @@
+import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -52,7 +53,6 @@ class _Profile extends State<Profile> {
 
   Widget _profileView(QueryResult result) {
     final nameList = result.data['profile'];
-
     return new Container(
         margin: const EdgeInsets.only(left: 15, right: 20),
         child: new Column(children: <Widget>[
@@ -87,6 +87,19 @@ class _Profile extends State<Profile> {
           ),
           Divider(color: Colors.black),
           _details(result),
+          Expanded(
+            child: Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: ListTile(
+                leading: Icon(Icons.info),
+                onTap: () => [
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => About()))
+                ],
+                title: Text("About"),
+              ),
+            ),
+          ),
         ]));
   }
 
@@ -96,7 +109,7 @@ class _Profile extends State<Profile> {
 
     String membership =
         (detailsList['isMembershipActive']) ? "Active" : "Suspended";
-    ;
+
     return Expanded(
         child: ListView(
       children: <Widget>[
