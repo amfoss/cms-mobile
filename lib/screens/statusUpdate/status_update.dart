@@ -13,8 +13,7 @@ class StatusUpdate extends StatefulWidget {
 class _StatusUpdateScreen extends State<StatusUpdate>
     with SingleTickerProviderStateMixin {
   TabController tabController;
-  static final now = DateTime.now();
-  DateTime selectedDate = DateTime(now.year,now.month,now.day-1);
+  DateTime selectedDate = DateTime.now().subtract(Duration(hours: 29));
 
   @override
   void initState() {
@@ -73,7 +72,7 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2018, 1),
-        lastDate: DateTime.now());
+        lastDate: DateTime.now().subtract(Duration(hours: 29)));
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
