@@ -67,6 +67,10 @@ samples, guidance on mobile development, and a full API reference.
 
 [url_launcher](https://pub.dev/packages/url_launcher): 5.4.2
 
+[flutter_markdown](https://pub.dev/packages/flutter_markdown): 0.3.4
+
+[html2md](https://pub.dev/packages/html2md): 0.5.1
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 

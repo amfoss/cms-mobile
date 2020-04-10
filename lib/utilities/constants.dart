@@ -21,6 +21,8 @@ final CMSLabelStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
+final List<String> choices = <String>["Select Date", "Messages"];
+
 final kBoxDecorationStyle = BoxDecoration(
   color: Colors.black12,
   borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 10.0),

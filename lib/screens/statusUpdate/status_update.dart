@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import 'members_didnot_sent.dart' as memberDidNotSend;
 import 'members_sent.dart' as membersSent;
+import 'messages.dart' as messages;
 
 class StatusUpdate extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _StatusUpdateScreen extends State<StatusUpdate>
 
   @override
   void initState() {
-    tabController = new TabController(vsync: this, length: 2);
+    tabController = new TabController(vsync: this, length: 3);
     super.initState();
   }
 
@@ -50,6 +51,10 @@ class _StatusUpdateScreen extends State<StatusUpdate>
               icon: new Icon(Icons.report),
               text: "Not sent",
             ),
+            new Tab(
+              icon: new Icon(Icons.message),
+              text: "Updates",
+            ),
           ],
         ),
       ),
@@ -58,6 +63,7 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         children: <Widget>[
           new membersSent.MembersSentTab(_getDate()).build(context),
           new memberDidNotSend.MemberDidNotSendTab(_getDate()).build(context),
+          new messages.MessagesTab(selectedDate).build(context),
         ],
       ),
     );
