@@ -14,6 +14,13 @@ final kLabelStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
+final messageLabelStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans',
+);
+
 final CMSLabelStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,

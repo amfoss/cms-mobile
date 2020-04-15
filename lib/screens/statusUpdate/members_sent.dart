@@ -1,3 +1,4 @@
+import 'package:cms_mobile/screens/statusUpdate/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -68,6 +69,15 @@ class MembersSentTab extends State<MembersSent> {
                 membersSentList['membersSent'][index]['member']['fullName']),
             subtitle: Text("@" +
                 membersSentList['membersSent'][index]['member']['username']),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Messages(
+                          selctedDate,
+                          membersSentList['membersSent'][index]['member']
+                              ['username'])));
+            },
           );
         },
         separatorBuilder: (context, index) => Divider());

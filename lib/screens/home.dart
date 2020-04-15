@@ -13,10 +13,13 @@ class HomePage extends StatefulWidget {
   const HomePage({Key key, this.username, this.url}) : super(key: key);
 
   @override
-  _HomePage createState() => _HomePage();
+  HomePageScreen createState() => HomePageScreen();
 }
 
-class _HomePage extends State<HomePage> {
+class HomePageScreen extends State<HomePage> {
+  static Link url;
+  static String username;
+
   int _currentIndex = 0;
   final List<Widget> _children = [Attendance(), StatusUpdate(), Profile()];
 
@@ -35,6 +38,8 @@ class _HomePage extends State<HomePage> {
       GraphQLClient(link: widget.url, cache: InMemoryCache()),
     );
 
+    url = widget.url;
+    username = widget.username;
     return GraphQLProvider(
       client: client,
       child: Scaffold(
