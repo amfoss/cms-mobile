@@ -1,18 +1,29 @@
+import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'members_didnot_sent.dart' as memberDidNotSend;
 import 'members_sent.dart' as membersSent;
-import 'messages.dart' as messages;
 
 class StatusUpdate extends StatefulWidget {
+  final String appUsername;
+
+  const StatusUpdate({this.appUsername});
+
   @override
-  _StatusUpdateScreen createState() => _StatusUpdateScreen();
+  _StatusUpdateScreen createState() => _StatusUpdateScreen(appUsername);
 }
 
 class _StatusUpdateScreen extends State<StatusUpdate>
     with SingleTickerProviderStateMixin {
+  String appUsername;
+
+  _StatusUpdateScreen(String appUsername) {
+    this.appUsername = appUsername;
+  }
+
+
   TabController tabController;
   DateTime selectedDate = DateTime.now().subtract(Duration(hours: 29));
 
@@ -36,10 +47,19 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         backgroundColor: appPrimaryColor,
         title: new Text(
             "Status update: ${DateFormat("yyyy-MM-dd").format(selectedDate)}"),
-        leading: new IconButton(
-          icon: new Icon(Icons.calendar_today),
-          onPressed: () => _selectDate(context),
-        ),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: handleClick,
+            itemBuilder: (BuildContext context) {
+              return choices.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
         bottom: new TabBar(
           controller: tabController,
           tabs: <Widget>[
@@ -62,6 +82,18 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         ],
       ),
     );
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Select Date':
+        _selectDate(context);
+        break;
+      case 'Messages List':
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => UserUpdates(appUsername)));
+        break;
+    }
   }
 
   String _getDate() {

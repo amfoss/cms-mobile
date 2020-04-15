@@ -21,6 +21,13 @@ final messageLabelStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
+final userUpdateHeadings = TextStyle(
+  color: Colors.black,
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'OpenSans',
+);
+
 final CMSLabelStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
@@ -28,7 +35,7 @@ final CMSLabelStyle = TextStyle(
   fontFamily: 'OpenSans',
 );
 
-final List<String> choices = <String>["Select Date", "Messages"];
+final List<String> choices = <String>["Select Date", "Messages List"];
 
 final kBoxDecorationStyle = BoxDecoration(
   color: Colors.black12,

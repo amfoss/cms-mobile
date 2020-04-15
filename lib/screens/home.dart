@@ -28,7 +28,9 @@ class HomePageScreen extends State<HomePage> {
     SizeConfig().init(context);
     final List<Widget> _children = [
       Attendance(),
-      StatusUpdate(),
+      StatusUpdate(
+        appUsername: widget.username,
+      ),
       Profile(
         username: widget.username,
       )
