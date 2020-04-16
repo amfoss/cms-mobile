@@ -47,19 +47,10 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         backgroundColor: appPrimaryColor,
         title: new Text(
             "Status update: ${DateFormat("yyyy-MM-dd").format(selectedDate)}"),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: handleClick,
-            itemBuilder: (BuildContext context) {
-              return choices.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: new Icon(Icons.calendar_today),
+          onPressed: () => _selectDate(context),
+        ),
         bottom: new TabBar(
           controller: tabController,
           tabs: <Widget>[
@@ -82,18 +73,6 @@ class _StatusUpdateScreen extends State<StatusUpdate>
         ],
       ),
     );
-  }
-
-  void handleClick(String value) {
-    switch (value) {
-      case 'Select Date':
-        _selectDate(context);
-        break;
-      case 'Messages List':
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => UserUpdates(appUsername)));
-        break;
-    }
   }
 
   String _getDate() {

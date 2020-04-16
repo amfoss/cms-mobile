@@ -26,9 +26,10 @@ dependencies:
   graphql_flutter: ^3.0.1-beta.1
   intl: ^0.16.1
   moor_flutter: ^2.1.1
-  url_launcher: 5.4.2
+  url_launcher: ^5.4.2
   flutter_markdown: ^0.3.4
   html2md: ^0.5.1
+  date_range_picker: ^1.0.6
 
 dev_dependencies:
   flutter_test:

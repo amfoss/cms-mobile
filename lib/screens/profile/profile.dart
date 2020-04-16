@@ -1,4 +1,5 @@
 import 'package:cms_mobile/screens/profile/about.dart';
+import 'package:cms_mobile/utilities/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -21,18 +22,11 @@ class _Profile extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: AppDrawer(),
       appBar: AppBar(
           backgroundColor: appPrimaryColor,
           title: const Text('Profile'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.info),
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => About()));
-              },
-            ),
-          ]),
+      ),
       body: Query(
         options: QueryOptions(
           documentNode: gql('''

@@ -71,6 +71,8 @@ samples, guidance on mobile development, and a full API reference.
 
 [html2md](https://pub.dev/packages/html2md): 0.5.1
 
+[date_range_picker](https://pub.dev/packages/date_range_picker): 1.0.6
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 

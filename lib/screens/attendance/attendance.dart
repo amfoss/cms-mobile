@@ -8,10 +8,10 @@ import 'present.dart' as present;
 
 class Attendance extends StatefulWidget {
   @override
-  _StatusUpdate createState() => _StatusUpdate();
+  _Attendance createState() => _Attendance();
 }
 
-class _StatusUpdate extends State<Attendance>
+class _Attendance extends State<Attendance>
     with SingleTickerProviderStateMixin {
   TabController tabController;
 

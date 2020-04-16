@@ -4,7 +4,7 @@ import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'statusUpdate/status_update.dart';
-import 'attendence/attendence.dart';
+import 'attendance/attendance.dart';
 
 class HomePage extends StatefulWidget {
   final Link url;
@@ -21,7 +21,6 @@ class HomePageScreen extends State<HomePage> {
   static String username;
 
   int _currentIndex = 0;
-  final List<Widget> _children = [Attendance(), StatusUpdate(), Profile()];
 
   @override
   Widget build(BuildContext context) {
