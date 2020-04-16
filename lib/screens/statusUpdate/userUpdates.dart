@@ -124,7 +124,7 @@ class _MessagesList extends State<UserUpdates> {
               style: userUpdateHeadings,
             ),
             subtitle:
-                MarkdownBody(data: html2md.convert(messagesList[0]['message'])),
+                MarkdownBody(data: html2md.convert(messagesList[index]['message'])),
           );
         },
         separatorBuilder: (context, index) => Divider());
