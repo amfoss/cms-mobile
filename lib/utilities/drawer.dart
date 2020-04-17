@@ -1,6 +1,7 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/screens/profile/profile.dart';
+import 'package:cms_mobile/screens/profile/update_profile.dart';
 import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_stats.dart';
 import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
@@ -27,7 +28,9 @@ class _AppDrawerState extends State<AppDrawer> {
           Divider(),
           _createDrawerItem(
               icon: Icons.account_circle,
-              text: 'Account'),
+              text: 'Update Profile',
+              onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => UpdateProfile()))),
           _createDrawerItem(
               icon: Icons.info,
               text: 'About',
