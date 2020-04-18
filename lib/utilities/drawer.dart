@@ -1,3 +1,4 @@
+import 'package:cms_mobile/screens/attendance/statistics/attendance_stats.dart';
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/screens/profile/update_profile.dart';
@@ -44,7 +45,13 @@ class _AppDrawerState extends State<AppDrawer> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => StatusUpdateStats()))),
-          _createDrawerItem(icon: Icons.trending_up, text: 'Attendance Stats'),
+          _createDrawerItem(
+              icon: Icons.trending_up,
+              text: 'Attendance Stats',
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AttendanceStats()))),
           _createDrawerItem(
               icon: Icons.score,
               text: 'Status Updates Overview',

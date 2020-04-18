@@ -5,18 +5,17 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:intl/intl.dart';
 
-
-class StatusUpdateStats extends StatefulWidget {
+class AttendanceStats extends StatefulWidget {
   @override
-  _StatusUpdateStats createState() => _StatusUpdateStats();
+  _AttendanceStats createState() => _AttendanceStats();
 }
 
-class _StatusUpdateStats extends State<StatusUpdateStats>
+class _AttendanceStats extends State<AttendanceStats>
     with SingleTickerProviderStateMixin {
   TabController tabController;
 
   DateTime initialDate = DateTime.now().subtract(Duration(days: 7));
-  DateTime lastDate = DateTime.now().subtract(Duration(hours: 29));
+  DateTime lastDate = new DateTime.now();
 
   @override
   void initState() {
@@ -35,7 +34,11 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: appPrimaryColor,
-          title: Text("Status Update stats" + "\n" + _getFormatedDate(initialDate)+ " - " + _getFormatedDate(lastDate)),
+          title: Text("Attendance stats" +
+              "\n" +
+              _getFormatedDate(initialDate) +
+              " - " +
+              _getFormatedDate(lastDate)),
           bottom: new TabBar(
             controller: tabController,
             tabs: <Widget>[
@@ -65,15 +68,15 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
             }
             if (result.data == null) {
               return Center(
-                child: Text('Status Update not found'),
+                child: Text('Attendance not found'),
               );
             }
-            if (result.data['clubStatusUpdate']['memberStats'].length == 0) {
+            if (result.data['clubAttendance']['memberStats'].length == 0) {
               return Center(
-                child: Text('No one a sent status update yet'),
+                child: Text('No attendance logged for these days.'),
               );
             }
-            print(result.data['clubStatusUpdate']['memberStats'][0]);
+            print(result.data['clubAttendance']['memberStats'][0]);
             return new TabBarView(
               controller: tabController,
               children: <Widget>[_topFive(result), _worstFive(result)],
@@ -84,14 +87,13 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
     );
   }
 
-  Future<Null> _selectDateRange() async{
+  Future<Null> _selectDateRange() async {
     final List<DateTime> picked = await DateRagePicker.showDatePicker(
         context: context,
         initialFirstDate: new DateTime.now().subtract(Duration(days: 7)),
-        initialLastDate: (DateTime.now().subtract(Duration(hours: 29))),
+        initialLastDate: (new DateTime.now()),
         firstDate: new DateTime(2015),
-        lastDate: DateTime.now().subtract(Duration(hours: 29))
-    );
+        lastDate: DateTime.now());
     if (picked != null && picked.length == 2) {
       print(picked);
       setState(() {
@@ -108,7 +110,7 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
   }
 
   Widget _topFive(QueryResult result) {
-    var topFiveList = result.data['clubStatusUpdate'];
+    var topFiveList = result.data['clubAttendance'];
     return ListView.separated(
         itemCount: 5,
         itemBuilder: (context, index) {
@@ -124,23 +126,25 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
               backgroundImage:
                   NetworkImage('https://avatars.githubusercontent.com/' + url),
             ),
-            title:
-                Text(topFiveList['memberStats'][index]['user']['fullName']),
-            subtitle: Text("count: " +
-                topFiveList['memberStats'][index]['statusCount']),
+            title: Text(topFiveList['memberStats'][index]['user']['fullName']),
+            subtitle: Text("Count: " +
+                topFiveList['memberStats'][index]['presentCount'] +
+                "\nTotal Time: " +
+                topFiveList['memberStats'][index]['totalDuration'] +
+                " hours"),
           );
         },
         separatorBuilder: (context, index) => Divider());
   }
 
   Widget _worstFive(QueryResult result) {
-    var worstFiveList = result.data['clubStatusUpdate'];
+    var worstFiveList = result.data['clubAttendance'];
     var lentgh = worstFiveList['memberStats'].length;
     return ListView.separated(
         itemCount: 5,
         itemBuilder: (context, index) {
-          String url = worstFiveList['memberStats'][lentgh - index - 1]
-              ['user']['avatar']['githubUsername'];
+          String url = worstFiveList['memberStats'][lentgh - index - 1]['user']
+              ['avatar']['githubUsername'];
           if (url == null) {
             url = 'github';
           }
@@ -151,38 +155,40 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
               backgroundImage:
                   NetworkImage('https://avatars.githubusercontent.com/' + url),
             ),
-            title: Text(worstFiveList['memberStats'][lentgh - index - 1]
-                ['user']['fullName']),
+            title: Text(worstFiveList['memberStats'][lentgh - index - 1]['user']
+                ['fullName']),
             subtitle: Text("count: " +
                 worstFiveList['memberStats'][lentgh - index - 1]
-                    ['statusCount']),
+                    ['presentCount'] +
+                "\nTotal TIme: " +
+                worstFiveList['memberStats'][lentgh - index - 1]
+                    ['totalDuration'] +
+                " hours"),
           );
         },
         separatorBuilder: (context, index) => Divider());
   }
 
-  String _getFormatedDate(DateTime dateTime){
+  String _getFormatedDate(DateTime dateTime) {
     return DateFormat("yyyy-MM-dd").format(dateTime);
   }
-
 
   String _buildQuery() {
     return '''
                 query{
-                    clubStatusUpdate(startDate: "${DateFormat("yyyy-MM-dd").format(initialDate)}", endDate: "${DateFormat("yyyy-MM-dd").format(lastDate)}")
+                    clubAttendance(startDate: "${DateFormat("yyyy-MM-dd").format(initialDate)}", endDate: "${DateFormat("yyyy-MM-dd").format(lastDate)}")
                     {
-                      memberStats
-                      {
-                        user
-                        {
+                      memberStats{
+                        user {
                           fullName
-                          avatar 
-                          {
+                          avatar {
                              githubUsername
                           }
                         }
-                       statusCount
-                      }
+                        presentCount
+                        avgDuration
+                        totalDuration
+                        }
                     }
                 }   
                       ''';
