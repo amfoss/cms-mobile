@@ -1,5 +1,5 @@
 name: cms_mobile
-description: A new Flutter application for amfoss cms 
+description: A new Flutter application for amfoss cms
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -30,6 +30,7 @@ dependencies:
   flutter_markdown: ^0.3.4
   html2md: ^0.5.1
   date_range_picker: ^1.0.6
+  fl_chart: ^0.9.0
 
 dev_dependencies:
   flutter_test:

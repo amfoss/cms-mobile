@@ -1,7 +1,7 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/screens/profile/about.dart';
-import 'package:cms_mobile/screens/profile/profile.dart';
 import 'package:cms_mobile/screens/profile/update_profile.dart';
+import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_graphs.dart';
 import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_stats.dart';
 import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
@@ -29,8 +29,8 @@ class _AppDrawerState extends State<AppDrawer> {
           _createDrawerItem(
               icon: Icons.account_circle,
               text: 'Update Profile',
-              onTap: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UpdateProfile()))),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => UpdateProfile()))),
           _createDrawerItem(
               icon: Icons.info,
               text: 'About',
@@ -43,19 +43,23 @@ class _AppDrawerState extends State<AppDrawer> {
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          StatusUpdateStats()))),
-          _createDrawerItem(
-              icon: Icons.trending_up,
-              text: 'Attendance Stats'),
+                      builder: (context) => StatusUpdateStats()))),
+          _createDrawerItem(icon: Icons.trending_up, text: 'Attendance Stats'),
           _createDrawerItem(
               icon: Icons.score,
-              text: 'Status Updates Overview'),
+              text: 'Status Updates Overview',
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => StatusUpdateGraphs()))),
           _createDrawerItem(
               icon: Icons.list,
               text: 'Messages List',
               onTap: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => UserUpdates(HomePageScreen.username)))),
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          UserUpdates(HomePageScreen.username)))),
           Divider(),
           _createDrawerItem(icon: Icons.bug_report, text: 'Report an issue'),
           ListTile(

@@ -73,6 +73,8 @@ samples, guidance on mobile development, and a full API reference.
 
 [date_range_picker](https://pub.dev/packages/date_range_picker): 1.0.6
 
+[fl_chart](https://pub.dev/packages/fl_chart): 0.9.0
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 
