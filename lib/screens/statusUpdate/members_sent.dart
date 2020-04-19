@@ -1,4 +1,5 @@
 import 'package:cms_mobile/screens/statusUpdate/messages.dart';
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -62,8 +63,10 @@ class MembersSentTab extends State<MembersSent> {
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  membersSentList['membersSent'][index]['member']['profile']
+                      ['profilePic'])),
             ),
             title: Text(
                 membersSentList['membersSent'][index]['member']['fullName']),
@@ -99,6 +102,9 @@ class MembersSentTab extends State<MembersSent> {
                                       fullName
                                       avatar{
                                         githubUsername
+                                      }
+                                      profile {
+                                        profilePic
                                       }
                                     }
                                   }

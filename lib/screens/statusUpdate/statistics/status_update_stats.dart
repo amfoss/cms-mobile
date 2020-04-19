@@ -1,10 +1,10 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:intl/intl.dart';
-
 
 class StatusUpdateStats extends StatefulWidget {
   @override
@@ -35,7 +35,11 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: appPrimaryColor,
-          title: Text("Status Update stats" + "\n" + _getFormatedDate(initialDate)+ " - " + _getFormatedDate(lastDate)),
+          title: Text("Status Update stats" +
+              "\n" +
+              _getFormatedDate(initialDate) +
+              " - " +
+              _getFormatedDate(lastDate)),
           bottom: new TabBar(
             controller: tabController,
             tabs: <Widget>[
@@ -84,14 +88,13 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
     );
   }
 
-  Future<Null> _selectDateRange() async{
+  Future<Null> _selectDateRange() async {
     final List<DateTime> picked = await DateRagePicker.showDatePicker(
         context: context,
         initialFirstDate: new DateTime.now().subtract(Duration(days: 7)),
         initialLastDate: (DateTime.now().subtract(Duration(hours: 29))),
         firstDate: new DateTime(2015),
-        lastDate: DateTime.now().subtract(Duration(hours: 29))
-    );
+        lastDate: DateTime.now().subtract(Duration(hours: 29)));
     if (picked != null && picked.length == 2) {
       print(picked);
       setState(() {
@@ -121,13 +124,14 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  topFiveList['memberStats'][index]['user']['profile']
+                      ['profilePic'])),
             ),
-            title:
-                Text(topFiveList['memberStats'][index]['user']['fullName']),
-            subtitle: Text("count: " +
-                topFiveList['memberStats'][index]['statusCount']),
+            title: Text(topFiveList['memberStats'][index]['user']['fullName']),
+            subtitle: Text(
+                "count: " + topFiveList['memberStats'][index]['statusCount']),
           );
         },
         separatorBuilder: (context, index) => Divider());
@@ -139,8 +143,8 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
     return ListView.separated(
         itemCount: 5,
         itemBuilder: (context, index) {
-          String url = worstFiveList['memberStats'][lentgh - index - 1]
-              ['user']['avatar']['githubUsername'];
+          String url = worstFiveList['memberStats'][lentgh - index - 1]['user']
+              ['avatar']['githubUsername'];
           if (url == null) {
             url = 'github';
           }
@@ -148,11 +152,13 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  worstFiveList['memberStats'][lentgh - index - 1]['user']
+                      ['profile']['profilePic'])),
             ),
-            title: Text(worstFiveList['memberStats'][lentgh - index - 1]
-                ['user']['fullName']),
+            title: Text(worstFiveList['memberStats'][lentgh - index - 1]['user']
+                ['fullName']),
             subtitle: Text("count: " +
                 worstFiveList['memberStats'][lentgh - index - 1]
                     ['statusCount']),
@@ -161,10 +167,9 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
         separatorBuilder: (context, index) => Divider());
   }
 
-  String _getFormatedDate(DateTime dateTime){
+  String _getFormatedDate(DateTime dateTime) {
     return DateFormat("yyyy-MM-dd").format(dateTime);
   }
-
 
   String _buildQuery() {
     return '''
@@ -179,6 +184,9 @@ class _StatusUpdateStats extends State<StatusUpdateStats>
                           avatar 
                           {
                              githubUsername
+                          }
+                          profile {
+                             profilePic
                           }
                         }
                        statusCount

@@ -1,3 +1,4 @@
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -33,12 +34,14 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
               child: Text('Status Update not found'),
             );
           }
-          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length == 0) {
+          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length ==
+              0) {
             return Center(
               child: Text('Everyone Sent their Status Update'),
             );
           }
-          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length == 0) {
+          if (result.data['dailyStatusUpdates']['memberDidNotSend'].length ==
+              0) {
             return Center(
               child: Text('Woohoo!\nEveryone sent an update today.'),
             );
@@ -65,8 +68,10 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  membersDidNotSentList['memberDidNotSend'][index]['member']
+                      ['profile']['profilePic'])),
             ),
             title: Text(membersDidNotSentList['memberDidNotSend'][index]
                 ['member']['fullName']),
@@ -89,6 +94,9 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
                                       fullName
                                       avatar{
                                         githubUsername
+                                      }
+                                      profile {
+                                        profilePic
                                       }
                                     }
                                   }

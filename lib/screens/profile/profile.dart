@@ -1,5 +1,6 @@
 import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/utilities/drawer.dart';
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -38,7 +39,8 @@ class _Profile extends State<Profile> {
                                 profile(username: "$username"){
     															fullName
                                   email
-                                  githubUsername                                
+                                  githubUsername  
+                                  profilePic                              
                                 }                              
                               }
                               '''),
@@ -72,8 +74,7 @@ class _Profile extends State<Profile> {
                 child: new CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(
-                      'https://avatars.githubusercontent.com/${nameList['githubUsername']}'),
+                  backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(nameList['githubUsername'], nameList['profilePic'])),
                 ),
               ),
               new Container(

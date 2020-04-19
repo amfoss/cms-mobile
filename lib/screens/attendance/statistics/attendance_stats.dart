@@ -1,5 +1,6 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
@@ -123,8 +124,10 @@ class _AttendanceStats extends State<AttendanceStats>
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  topFiveList['memberStats'][index]['user']['profile']
+                      ['profilePic'])),
             ),
             title: Text(topFiveList['memberStats'][index]['user']['fullName']),
             subtitle: Text("Count: " +
@@ -152,8 +155,10 @@ class _AttendanceStats extends State<AttendanceStats>
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                  url,
+                  worstFiveList['memberStats'][lentgh - index - 1]['user']
+                      ['profile']['profilePic'])),
             ),
             title: Text(worstFiveList['memberStats'][lentgh - index - 1]['user']
                 ['fullName']),
@@ -183,6 +188,9 @@ class _AttendanceStats extends State<AttendanceStats>
                           fullName
                           avatar {
                              githubUsername
+                          }
+                          profile{
+                             profilePic
                           }
                         }
                         presentCount

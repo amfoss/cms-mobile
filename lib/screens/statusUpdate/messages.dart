@@ -1,5 +1,6 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -89,7 +90,10 @@ class MessagesTab extends State<Messages> {
                   radius: 30,
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(
-                      'https://avatars.githubusercontent.com/' + url),
+                      ImageAddressProvider.imageAddress(
+                          url,
+                          messagesList[index]['member']['profile']
+                              ['profilePic'])),
                 ),
                 title:
                     Text(messagesList[index]['member']['fullName'].toString()),
@@ -150,6 +154,9 @@ class MessagesTab extends State<Messages> {
                                   githubUsername
                                 }
                                 fullName
+                                profile {
+                                  profilePic
+                                }
                               }
                               timestamp
                             } 

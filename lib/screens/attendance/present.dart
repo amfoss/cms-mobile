@@ -1,3 +1,4 @@
+import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
@@ -66,8 +67,8 @@ class AttendancePresent extends State<MembersPresent> {
             leading: new CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey,
-              backgroundImage:
-                  NetworkImage('https://avatars.githubusercontent.com/' + url),
+              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(url, attendance['membersPresent'][index]['member']['profile']
+              ['profilePic']))
             ),
             title:
                 Text(attendance['membersPresent'][index]['member']['fullName']),
@@ -89,6 +90,9 @@ class AttendancePresent extends State<MembersPresent> {
                                     fullName
                                     avatar {
                                       githubUsername
+                                    }
+                                    profile {
+                                      profilePic
                                     }
                                   }
                                   duration
