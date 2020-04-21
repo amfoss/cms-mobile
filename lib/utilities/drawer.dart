@@ -7,6 +7,7 @@ import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_stats.d
 import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -39,28 +40,28 @@ class _AppDrawerState extends State<AppDrawer> {
                   context, MaterialPageRoute(builder: (context) => About()))),
           Divider(),
           _createDrawerItem(
-              icon: Icons.trending_up,
+              icon: FlutterIcons.graph_trend_fou,
               text: 'Status Update Stats',
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => StatusUpdateStats()))),
           _createDrawerItem(
-              icon: Icons.trending_up,
+              icon: FlutterIcons.graph_trend_fou,
               text: 'Attendance Stats',
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => AttendanceStats()))),
           _createDrawerItem(
-              icon: Icons.score,
+              icon: FlutterIcons.graph_oct,
               text: 'Status Updates Overview',
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => StatusUpdateGraphs()))),
           _createDrawerItem(
-              icon: Icons.list,
+              icon: FlutterIcons.list_alt_faw5,
               text: 'Messages List',
               onTap: () => Navigator.push(
                   context,

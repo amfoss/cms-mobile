@@ -2,7 +2,10 @@ import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/utilities/drawer.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utilities/constants.dart';
 
@@ -25,8 +28,8 @@ class _Profile extends State<Profile> {
     return Scaffold(
       endDrawer: AppDrawer(),
       appBar: AppBar(
-          backgroundColor: appPrimaryColor,
-          title: const Text('Profile'),
+        backgroundColor: appPrimaryColor,
+        title: const Text('Profile'),
       ),
       body: Query(
         options: QueryOptions(
@@ -34,13 +37,19 @@ class _Profile extends State<Profile> {
                               query {
                                 user(username: "$username"){
                                   admissionYear                                
-                                  isMembershipActive                                
+                                  isMembershipActive 
+                                  isInLab
+                                  lastSeenInLab                               
                                 }
                                 profile(username: "$username"){
-    															fullName
+    															about
+                                  batch
                                   email
-                                  githubUsername  
-                                  profilePic                              
+                                  fullName
+                                  githubUsername
+                                  gitlabUsername
+                                  profilePic  
+                                  telegramID                            
                                 }                              
                               }
                               '''),
@@ -70,11 +79,13 @@ class _Profile extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               new Container(
-                margin: EdgeInsets.only(top: 10, bottom: 20, right: 20),
+                margin: EdgeInsets.only(top: 20, bottom: 20, right: 20),
                 child: new CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(nameList['githubUsername'], nameList['profilePic'])),
+                  backgroundImage: NetworkImage(
+                      ImageAddressProvider.imageAddress(
+                          nameList['githubUsername'], nameList['profilePic'])),
                 ),
               ),
               new Container(
@@ -86,9 +97,30 @@ class _Profile extends State<Profile> {
                         style: Theme.of(context).textTheme.headline),
                     new Container(
                       margin: const EdgeInsets.only(top: 5.0),
-                      child: new Text('@${nameList['githubUsername']}',
+                      child: new Text(nameList['about'],
                           style: Theme.of(context).textTheme.subtitle),
                     ),
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                            icon: new Icon(FlutterIcons.github_faw5d),
+                            onPressed: () {
+                              launch('https://github.com/' +
+                                  nameList['githubUsername']);
+                            }),
+                        IconButton(
+                            icon: new Icon(FlutterIcons.gitlab_faw5d),
+                            onPressed: () {
+                              launch('https://gitlab.com/' +
+                                  nameList['gitlabUsername']);
+                            }),
+                        IconButton(
+                            icon: new Icon(FlutterIcons.telegram_faw5d),
+                            onPressed: () {
+                              launch('https://t.me/' + nameList['telegramID']);
+                            })
+                      ],
+                    )
                   ],
                 ),
               )
@@ -136,7 +168,33 @@ class _Profile extends State<Profile> {
             'Membership Status: $membership',
           ),
         ),
+        Divider(),
+        ListTile(
+          leading: Icon(FlutterIcons.eye_faw5s),
+          title: Text(
+            _isInLab(result),
+          ),
+        )
       ],
     ));
+  }
+
+  String _isInLab(QueryResult result) {
+    final detailsList = result.data['user'];
+    if (detailsList['isInLab']) {
+      return "You are in lab now";
+    }
+    String lastSeen =
+        "Last seen: " + _getFormatedDate(detailsList['lastSeenInLab']);
+    return lastSeen;
+  }
+
+  String _getFormatedDate(String date) {
+    var formmatedTime =
+        DateFormat("HH:mm:ss").parse(date.substring(11, 19), true);
+    var dateLocal = formmatedTime.toLocal();
+    return date.substring(0, 10) +
+        " " +
+        dateLocal.toIso8601String().substring(11, 19);
   }
 }

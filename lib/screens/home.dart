@@ -2,6 +2,7 @@ import 'package:cms_mobile/screens/profile/profile.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'statusUpdate/status_update.dart';
 import 'attendance/attendance.dart';
@@ -57,7 +58,7 @@ class HomePageScreen extends State<HomePage> {
                     title: Text("Attendance"),
                   ),
                   BottomNavigationBarItem(
-                      icon: Icon(Icons.check_box),
+                      icon: Icon(FlutterIcons.gmail_mco),
                       title: Text("Status Update")),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.person), title: Text("Profile"))

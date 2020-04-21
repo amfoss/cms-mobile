@@ -75,6 +75,8 @@ samples, guidance on mobile development, and a full API reference.
 
 [fl_chart](https://pub.dev/packages/fl_chart): 0.9.0
 
+[flutter_icons](https://pub.dev/packages/flutter_icons): 1.1.0
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 
