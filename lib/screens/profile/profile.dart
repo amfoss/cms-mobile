@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utilities/constants.dart';
@@ -95,29 +96,46 @@ class _Profile extends State<Profile> {
                   children: <Widget>[
                     new Text('${nameList['fullName']}',
                         style: Theme.of(context).textTheme.headline),
-                    new Container(
-                      margin: const EdgeInsets.only(top: 5.0),
-                      child: new Text(nameList['about'],
-                          style: Theme.of(context).textTheme.subtitle),
-                    ),
                     Row(
                       children: <Widget>[
                         IconButton(
                             icon: new Icon(FlutterIcons.github_faw5d),
                             onPressed: () {
-                              launch('https://github.com/' +
-                                  nameList['githubUsername']);
+                              if (nameList['githubUsername'] != null) {
+                                launch('https://github.com/' +
+                                    nameList['githubUsername']);
+                              } else {
+                                Toast.show(
+                                    "GitHub username not available.", context,
+                                    duration: Toast.LENGTH_LONG,
+                                    gravity: Toast.BOTTOM);
+                              }
                             }),
                         IconButton(
                             icon: new Icon(FlutterIcons.gitlab_faw5d),
                             onPressed: () {
-                              launch('https://gitlab.com/' +
-                                  nameList['gitlabUsername']);
+                              if (nameList['gitlabUsername'] != null) {
+                                launch('https://gitlab.com/' +
+                                    nameList['gitlabUsername']);
+                              } else {
+                                Toast.show(
+                                    "GitLab username not available.", context,
+                                    duration: Toast.LENGTH_LONG,
+                                    gravity: Toast.BOTTOM);
+                              }
                             }),
                         IconButton(
                             icon: new Icon(FlutterIcons.telegram_faw5d),
                             onPressed: () {
-                              launch('https://t.me/' + nameList['telegramID']);
+                              if (nameList['telegramID'] != null) {
+                                launch(
+                                    'https://t.me/' + nameList['telegramID']);
+                              } else {
+                                Toast.show(
+                                    "Telegram username not available.", context,
+                                    duration: Toast.LENGTH_LONG,
+                                    gravity: Toast.BOTTOM);
+                              }
                             })
                       ],
                     )
@@ -125,6 +143,11 @@ class _Profile extends State<Profile> {
                 ),
               )
             ],
+          ),
+          new Container(
+            margin: const EdgeInsets.only(top: 5.0),
+            child: new Text(nameList['about'],
+                style: Theme.of(context).textTheme.subtitle),
           ),
           Divider(color: Colors.black),
           _details(result),
