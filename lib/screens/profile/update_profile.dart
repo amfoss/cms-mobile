@@ -2,10 +2,7 @@ import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:html2md/html2md.dart' as html2md;
-import 'package:intl/intl.dart';
 
 class UpdateProfile extends StatefulWidget {
   @override
@@ -21,8 +18,10 @@ class UpdateProfileScreen extends State<UpdateProfile> {
   TextEditingController _firstNameController = new TextEditingController();
   TextEditingController _lastNameController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
+  TextEditingController _customEmailController = new TextEditingController();
   TextEditingController _phoneNumberController = new TextEditingController();
   TextEditingController _githubUsernameController = new TextEditingController();
+  TextEditingController _gitlabUsernameController = new TextEditingController();
   TextEditingController _rollNumberController = new TextEditingController();
   TextEditingController _batchController = new TextEditingController();
   TextEditingController _aboutController = new TextEditingController();
@@ -91,10 +90,14 @@ class UpdateProfileScreen extends State<UpdateProfile> {
                       "Last Name", "Enter your Last Name", _lastNameController),
                   _buildTextField(
                       "Email", "Enter your Email", _emailController),
+                  _buildTextField(
+                      "Custom Email", "Enter your Custom Email", _customEmailController),
                   _buildTextField("Phone Number", "Enter your Phone Number",
                       _phoneNumberController),
-                  _buildTextField("Github Username",
-                      "Enter your Github username", _githubUsernameController),
+                  _buildTextField("GitHub Username",
+                      "Enter your GitHub username", _githubUsernameController),
+                  _buildTextField("GitLab Username",
+                      "Enter your GitLab username", _gitlabUsernameController),
                   _buildTextField("Roll Number", "Enter your Roll number",
                       _rollNumberController),
                   _buildTextField(
@@ -115,8 +118,10 @@ class UpdateProfileScreen extends State<UpdateProfile> {
     _firstNameController.text = result.data['profile']['firstName'];
     _lastNameController.text = result.data['profile']['lastName'];
     _emailController.text = result.data['profile']['email'];
+    _customEmailController.text = result.data['profile']['customEmail'];
     _phoneNumberController.text = result.data['profile']['phone'];
     _githubUsernameController.text = result.data['profile']['githubUsername'];
+    _gitlabUsernameController.text = result.data['profile']['gitlabUsername'];
     _rollNumberController.text = result.data['profile']['roll'];
     _batchController.text = result.data['profile']['batch'];
     _aboutController.text = result.data['profile']['about'];
@@ -132,8 +137,8 @@ class UpdateProfileScreen extends State<UpdateProfile> {
     roll = _rollNumberController.text;
     batch = _batchController.text;
     about = _aboutController.text;
-    gitlabUsername = "abc";
-    customEmail = "abc";
+    gitlabUsername = _gitlabUsernameController.text;
+    customEmail = _customEmailController.text;
   }
 
   Widget _buildUpdateBtn(GraphQLClient client, BuildContext context) {
@@ -232,11 +237,11 @@ class UpdateProfileScreen extends State<UpdateProfile> {
                       batch
                       email
                       firstName
-                      githubUsername
                       lastName
                       phone
                       roll
                       githubUsername
+                      gitlabUsername
                       customEmail
                     }
                   }
@@ -247,7 +252,17 @@ class UpdateProfileScreen extends State<UpdateProfile> {
     _getTexts();
     return '''
             mutation {
-                UpdateProfile(about: "${_aboutController.text}", batch: ${int.parse(_batchController.text)}, email: "${_emailController.text}", firstName: "${_firstNameController.text}", githubUsername: "${_githubUsernameController.text}", lastName: "${_lastNameController.text}", phoneNo: "${_phoneNumberController.text}", roll: "${_rollNumberController.text}", username: "${_usernameController.text}") {
+                UpdateProfile(about: "${_aboutController.text}", 
+                batch: ${int.parse(_batchController.text)}, 
+                email: "${_emailController.text}", 
+                customEmail: "${_customEmailController.text}", 
+                firstName: "${_firstNameController.text}", 
+                githubUsername: "${_githubUsernameController.text}", 
+                gitlabUsername: "${_gitlabUsernameController.text}", 
+                lastName: "${_lastNameController.text}", 
+                phoneNo: "${_phoneNumberController.text}", 
+                roll: "${_rollNumberController.text}", 
+                username: "${_usernameController.text}") {
                   id
                 }
               }
