@@ -1,11 +1,11 @@
-import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/utilities/drawer.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utilities/constants.dart';
@@ -21,54 +21,89 @@ class Profile extends StatefulWidget {
 
 class _Profile extends State<Profile> {
   final String username;
+  bool isConnection = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   _Profile(this.username);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: AppDrawer(),
-      appBar: AppBar(
-        backgroundColor: appPrimaryColor,
-        title: const Text('Profile'),
-      ),
-      body: Query(
-        options: QueryOptions(
-          documentNode: gql('''
-                              query {
-                                user(username: "$username"){
-                                  admissionYear                                
-                                  isMembershipActive 
-                                  isInLab
-                                  lastSeenInLab                               
-                                }
-                                profile(username: "$username"){
-    															about
-                                  batch
-                                  email
-                                  fullName
-                                  githubUsername
-                                  gitlabUsername
-                                  profilePic  
-                                  telegramID                            
-                                }                              
-                              }
-                              '''),
+    return OfflineBuilder(
+      debounceDuration: Duration.zero,
+      connectivityBuilder: (BuildContext context,
+          ConnectivityResult connectivity,
+          Widget child,) {
+        if (connectivity == ConnectivityResult.none) {
+          isConnection = false;
+        } else {
+          if (isConnection == false) {
+            final snackBar =
+            SnackBar(content: Text('Your internet is live again'));
+            _scaffoldKey.currentState.showSnackBar(snackBar);
+            SchedulerBinding.instance.addPostFrameCallback((_) =>
+                setState(() {
+                  isConnection = true;
+                }));
+          }
+          isConnection = true;
+        }
+        return child;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        resizeToAvoidBottomPadding: false,
+        endDrawer: AppDrawer(),
+        appBar: AppBar(
+          backgroundColor: appPrimaryColor,
+          title: const Text('Profile'),
         ),
-        builder: (QueryResult result,
-            {VoidCallback refetch, FetchMore fetchMore}) {
-          if (result.loading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (result.data == null) {
-            print(username);
-            print('NOT FOUND NAMES');
-            return Center(child: Text('Names not found.'));
-          }
-          return _profileView(result);
-        },
+        body: Query(
+          options: QueryOptions(
+            documentNode: gql(_getBuildQuery()),
+          ),
+          builder: (QueryResult result,
+              {VoidCallback refetch, FetchMore fetchMore}) {
+            if (result.loading) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (!isConnection) {
+              print('No Internet');
+              return Center(
+                  child: Text('Please check your internet connection'));
+            }
+            if (result.data == null) {
+              print(username);
+              print('NOT FOUND NAMES');
+              return Center(child: Text('Names not found.'));
+            }
+            return _profileView(result);
+          },
+        ),
       ),
     );
+  }
+
+  String _getBuildQuery() {
+    return '''
+                                query {
+                                  user(username: "$username"){
+                                    admissionYear                                
+                                    isMembershipActive 
+                                    isInLab
+                                    lastSeenInLab                               
+                                  }
+                                  profile(username: "$username"){
+      															about
+                                    batch
+                                    email
+                                    fullName
+                                    githubUsername
+                                    gitlabUsername
+                                    profilePic  
+                                    telegramID                            
+                                  }                              
+                                }
+                                ''';
   }
 
   Widget _profileView(QueryResult result) {
@@ -105,10 +140,10 @@ class _Profile extends State<Profile> {
                                 launch('https://github.com/' +
                                     nameList['githubUsername']);
                               } else {
-                                Toast.show(
-                                    "GitHub username not available.", context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
+                                final snackBar = SnackBar(
+                                    content: Text('github username not found'));
+                                _scaffoldKey.currentState
+                                    .showSnackBar(snackBar);
                               }
                             }),
                         IconButton(
@@ -118,10 +153,10 @@ class _Profile extends State<Profile> {
                                 launch('https://gitlab.com/' +
                                     nameList['gitlabUsername']);
                               } else {
-                                Toast.show(
-                                    "GitLab username not available.", context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
+                                final snackBar = SnackBar(
+                                    content: Text('Gitlab username not found'));
+                                _scaffoldKey.currentState
+                                    .showSnackBar(snackBar);
                               }
                             }),
                         IconButton(
@@ -131,10 +166,11 @@ class _Profile extends State<Profile> {
                                 launch(
                                     'https://t.me/' + nameList['telegramID']);
                               } else {
-                                Toast.show(
-                                    "Telegram username not available.", context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
+                                final snackBar = SnackBar(
+                                    content: Text(
+                                        'Telegram username not availible'));
+                                _scaffoldKey.currentState
+                                    .showSnackBar(snackBar);
                               }
                             })
                       ],

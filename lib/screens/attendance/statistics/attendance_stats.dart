@@ -1,9 +1,11 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
-import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_offline/flutter_offline.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
 
 class AttendanceStats extends StatefulWidget {
@@ -14,6 +16,8 @@ class AttendanceStats extends StatefulWidget {
 class _AttendanceStats extends State<AttendanceStats>
     with SingleTickerProviderStateMixin {
   TabController tabController;
+  bool isConnection = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   DateTime initialDate = DateTime.now().subtract(Duration(days: 7));
   DateTime lastDate = new DateTime.now();
@@ -32,57 +36,90 @@ class _AttendanceStats extends State<AttendanceStats>
 
     return GraphQLProvider(
       client: client,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: appPrimaryColor,
-          title: Text("Attendance stats" +
-              "\n" +
-              _getFormatedDate(initialDate) +
-              " - " +
-              _getFormatedDate(lastDate)),
-          bottom: new TabBar(
-            controller: tabController,
-            tabs: <Widget>[
-              new Tab(
-                icon: new Icon(Icons.assignment_turned_in),
-                text: "Top 5",
-              ),
-              new Tab(
-                icon: new Icon(Icons.report),
-                text: "Worst 5",
-              ),
-            ],
-          ),
-          leading: IconButton(
-            icon: new Icon(Icons.calendar_today),
-            onPressed: () => _selectDateRange(),
-          ),
-        ),
-        body: Query(
-          options: QueryOptions(documentNode: gql(_buildQuery())),
-          builder: (QueryResult result,
-              {VoidCallback refetch, FetchMore fetchMore}) {
-            if (result.loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+      child: OfflineBuilder(
+        debounceDuration: Duration.zero,
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
+          if (connectivity == ConnectivityResult.none) {
+            if (isConnection == true) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                final snackBar = SnackBar(
+                    content: Text('You dont have internet Connection'));
+                _scaffoldKey.currentState.showSnackBar(snackBar);
+              });
             }
-            if (result.data == null) {
-              return Center(
-                child: Text('Attendance not found'),
-              );
+
+            isConnection = false;
+          } else {
+            if (isConnection == false) {
+              final snackBar =
+              SnackBar(content: Text('Your internet is live again'));
+              _scaffoldKey.currentState.showSnackBar(snackBar);
+              SchedulerBinding.instance
+                  .addPostFrameCallback((_) =>
+                  setState(() {
+                    isConnection = true;
+                  }));
             }
-            if (result.data['clubAttendance']['memberStats'].length == 0) {
-              return Center(
-                child: Text('No attendance logged for these days.'),
-              );
-            }
-            print(result.data['clubAttendance']['memberStats'][0]);
-            return new TabBarView(
+
+            isConnection = true;
+          }
+          return child;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            backgroundColor: appPrimaryColor,
+            title: Text("Attendance stats" +
+                "\n" +
+                _getFormatedDate(initialDate) +
+                " - " +
+                _getFormatedDate(lastDate)),
+            bottom: new TabBar(
               controller: tabController,
-              children: <Widget>[_topFive(result), _worstFive(result)],
-            );
-          },
+              tabs: <Widget>[
+                new Tab(
+                  icon: new Icon(Icons.assignment_turned_in),
+                  text: "Top 5",
+                ),
+                new Tab(
+                  icon: new Icon(Icons.report),
+                  text: "Worst 5",
+                ),
+              ],
+            ),
+            leading: IconButton(
+              icon: new Icon(Icons.calendar_today),
+              onPressed: () => _selectDateRange(),
+            ),
+          ),
+          body: Query(
+            options: QueryOptions(documentNode: gql(_buildQuery())),
+            builder: (QueryResult result,
+                {VoidCallback refetch, FetchMore fetchMore}) {
+              if (result.loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (result.data == null) {
+                return Center(
+                  child: Text('Attendance not found'),
+                );
+              }
+              if (result.data['clubAttendance']['memberStats'].length == 0) {
+                return Center(
+                  child: Text('No attendance logged for these days.'),
+                );
+              }
+              print(result.data['clubAttendance']['memberStats'][0]);
+              return new TabBarView(
+                controller: tabController,
+                children: <Widget>[_topFive(result), _worstFive(result)],
+              );
+            },
+          ),
         ),
       ),
     );

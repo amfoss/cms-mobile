@@ -3,7 +3,9 @@ import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:intl/intl.dart';
@@ -24,6 +26,8 @@ class Messages extends StatefulWidget {
 class MessagesTab extends State<Messages> {
   String selectedDate;
   String username;
+  bool isConnection = true;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   MessagesTab(String selectedDate, String username) {
     this.selectedDate = selectedDate;
@@ -38,34 +42,67 @@ class MessagesTab extends State<Messages> {
 
     return GraphQLProvider(
       client: client,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: appPrimaryColor,
-          title: Text("Status update message"),
-        ),
-        body: Query(
-          options: QueryOptions(documentNode: gql(_buildQuery())),
-          builder: (QueryResult result,
-              {VoidCallback refetch, FetchMore fetchMore}) {
-            if (result.loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+      child: OfflineBuilder(
+        debounceDuration: Duration.zero,
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
+          if (connectivity == ConnectivityResult.none) {
+            if (isConnection == true) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                final snackBar = SnackBar(
+                    content: Text('You dont have internet Connection'));
+                _scaffoldKey.currentState.showSnackBar(snackBar);
+              });
             }
-            if (result.data == null) {
-              return Center(
-                child: Text('Status Update not found'),
-              );
+
+            isConnection = false;
+          } else {
+            if (isConnection == false) {
+              final snackBar =
+              SnackBar(content: Text('Your internet is live again'));
+              _scaffoldKey.currentState.showSnackBar(snackBar);
+              SchedulerBinding.instance
+                  .addPostFrameCallback((_) =>
+                  setState(() {
+                    isConnection = true;
+                  }));
             }
-            if (result.data['getMemberStatusUpdates'].length == 0) {
-              return Center(
-                child: Text('No status updates for this date'),
-              );
-            }
-            print(selectedDate);
-            print(result.data['getMemberStatusUpdates'][0]['member']);
-            return _membersSentList(result);
-          },
+
+            isConnection = true;
+          }
+          return child;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            backgroundColor: appPrimaryColor,
+            title: Text("Status update message"),
+          ),
+          body: Query(
+            options: QueryOptions(documentNode: gql(_buildQuery())),
+            builder: (QueryResult result,
+                {VoidCallback refetch, FetchMore fetchMore}) {
+              if (result.loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (result.data == null) {
+                return Center(
+                  child: Text('Status Update not found'),
+                );
+              }
+              if (result.data['getMemberStatusUpdates'].length == 0) {
+                return Center(
+                  child: Text('No status updates for this date'),
+                );
+              }
+              print(selectedDate);
+              print(result.data['getMemberStatusUpdates'][0]['member']);
+              return _membersSentList(result);
+            },
+          ),
         ),
       ),
     );

@@ -2,6 +2,8 @@ import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UpdateProfile extends StatefulWidget {
@@ -12,6 +14,7 @@ class UpdateProfile extends StatefulWidget {
 class UpdateProfileScreen extends State<UpdateProfile> {
   final String username = HomePageScreen.username;
 
+  bool isConnection = true;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   TextEditingController _usernameController = new TextEditingController();
@@ -48,66 +51,102 @@ class UpdateProfileScreen extends State<UpdateProfile> {
 
     return GraphQLProvider(
       client: client,
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: appPrimaryColor,
-          title: Text("Update Profile"),
-        ),
-        body: Query(
-          options: QueryOptions(documentNode: gql(_buildQuery())),
-          builder: (QueryResult result,
-              {VoidCallback refetch, FetchMore fetchMore}) {
-            if (result.loading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+      child: OfflineBuilder(
+        debounceDuration: Duration.zero,
+        connectivityBuilder: (BuildContext context,
+            ConnectivityResult connectivity,
+            Widget child,) {
+          if (connectivity == ConnectivityResult.none) {
+            if (isConnection == true) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                final snackBar = SnackBar(
+                    content: Text('You dont have internet Connection'));
+                _scaffoldKey.currentState.showSnackBar(snackBar);
+              });
             }
-            if (result.data == null) {
-              return Center(
-                child: Text('Status Update not found'),
-              );
+
+            isConnection = false;
+          } else {
+            if (isConnection == false) {
+              final snackBar =
+              SnackBar(content: Text('Your internet is live again'));
+              _scaffoldKey.currentState.showSnackBar(snackBar);
+              SchedulerBinding.instance
+                  .addPostFrameCallback((_) =>
+                  setState(() {
+                    isConnection = true;
+                  }));
             }
-            if (result.data['profile'].length == 0) {
-              return Center(
-                child: Text('No status updates for this date'),
+
+            isConnection = true;
+          }
+          return child;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            backgroundColor: appPrimaryColor,
+            title: Text("Update Profile"),
+          ),
+          body: Query(
+            options: QueryOptions(documentNode: gql(_buildQuery())),
+            builder: (QueryResult result,
+                {VoidCallback refetch, FetchMore fetchMore}) {
+              if (result.loading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (result.data == null) {
+                return Center(
+                  child: Text('Status Update not found'),
+                );
+              }
+              if (result.data['profile'].length == 0) {
+                return Center(
+                  child: Text('No status updates for this date'),
+                );
+              }
+              print(result.data['profile']);
+              _fillTextFormFields(result);
+              return Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.widthFactor * 30.0,
+                    vertical: SizeConfig.widthFactor * 20.0),
+                height: double.infinity,
+                child: ListView(
+                  children: <Widget>[
+                    _buildTextField(
+                        "username", "Enter your username", _usernameController),
+                    _buildTextField("First Name", "Enter your First Name",
+                        _firstNameController),
+                    _buildTextField("Last Name", "Enter your Last Name",
+                        _lastNameController),
+                    _buildTextField(
+                        "Email", "Enter your Email", _emailController),
+                    _buildTextField("Custom Email", "Enter your Custom Email",
+                        _customEmailController),
+                    _buildTextField("Phone Number", "Enter your Phone Number",
+                        _phoneNumberController),
+                    _buildTextField(
+                        "GitHub Username",
+                        "Enter your GitHub username",
+                        _githubUsernameController),
+                    _buildTextField(
+                        "GitLab Username",
+                        "Enter your GitLab username",
+                        _gitlabUsernameController),
+                    _buildTextField("Roll Number", "Enter your Roll number",
+                        _rollNumberController),
+                    _buildTextField(
+                        "Batch", "Enter your Batch", _batchController),
+                    _buildTextField("About", "Enter About", _aboutController),
+                    _buildUpdateBtn(graphQLClient, context),
+                  ],
+                ),
               );
-            }
-            print(result.data['profile']);
-            _fillTextFormFields(result);
-            return Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.widthFactor * 30.0,
-                  vertical: SizeConfig.widthFactor * 20.0),
-              height: double.infinity,
-              child: ListView(
-                children: <Widget>[
-                  _buildTextField(
-                      "username", "Enter your username", _usernameController),
-                  _buildTextField("First Name", "Enter your First Name",
-                      _firstNameController),
-                  _buildTextField(
-                      "Last Name", "Enter your Last Name", _lastNameController),
-                  _buildTextField(
-                      "Email", "Enter your Email", _emailController),
-                  _buildTextField(
-                      "Custom Email", "Enter your Custom Email", _customEmailController),
-                  _buildTextField("Phone Number", "Enter your Phone Number",
-                      _phoneNumberController),
-                  _buildTextField("GitHub Username",
-                      "Enter your GitHub username", _githubUsernameController),
-                  _buildTextField("GitLab Username",
-                      "Enter your GitLab username", _gitlabUsernameController),
-                  _buildTextField("Roll Number", "Enter your Roll number",
-                      _rollNumberController),
-                  _buildTextField(
-                      "Batch", "Enter your Batch", _batchController),
-                  _buildTextField("About", "Enter About", _aboutController),
-                  _buildUpdateBtn(graphQLClient, context),
-                ],
-              ),
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -175,7 +214,6 @@ class UpdateProfileScreen extends State<UpdateProfile> {
             if (result.data['UpdateProfile']['id'] != null) {
               final snackBar = SnackBar(content: Text('Profile Updated'));
               _scaffoldKey.currentState.showSnackBar(snackBar);
-
             } else {
               final snackBar =
                   SnackBar(content: Text('Something error occoured'));
