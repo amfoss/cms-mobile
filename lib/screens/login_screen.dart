@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
-          child: TextField(
+          child: TextFormField(
             keyboardType: TextInputType.emailAddress,
             controller: _usernameController,
             style: TextStyle(
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
-          child: TextField(
+          child: TextFormField(
             controller: _passwordController,
             obscureText: passwordInvisible,
             style: TextStyle(
