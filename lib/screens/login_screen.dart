@@ -4,7 +4,6 @@ import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:toast/toast.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -151,48 +150,41 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           onPressed: () async {
-            if (_usernameController.text.isNotEmpty && _passwordController.text.isNotEmpty){
-              final String authMutation = '''
-                       mutation{
-                         tokenAuth(username:"${_usernameController
-                  .text}", password:"${_passwordController.text}") {
-                           token
-                           }
-                       }
-                       ''';
-              final HttpLink httpLink = HttpLink(
-                uri: 'https://api.amfoss.in/',
-              );
-              GraphQLClient _client = GraphQLClient(
-                  link: httpLink,
-                  cache: OptimisticCache(
-                      dataIdFromObject: typenameDataIdFromObject));
-              QueryResult result =
-              await _client.mutate(MutationOptions(document: authMutation));
+            final String authMutation = '''
+                        mutation{
+                          tokenAuth(username:"${_usernameController.text}", password:"${_passwordController.text}") {
+                            token
+                            }
+                        }
+                        ''';
 
-              String token = result.data['tokenAuth']['token'];
-              final AuthLink authLink = AuthLink(
-                getToken: () async => 'JWT $token',
-              );
-              final Link link = authLink.concat(httpLink);
+            final HttpLink httpLink = HttpLink(
+              uri: 'https://api.amfoss.in/',
+            );
+            GraphQLClient _client = GraphQLClient(
+                link: httpLink,
+                cache: OptimisticCache(
+                    dataIdFromObject: typenameDataIdFromObject));
+            QueryResult result =
+                await _client.mutate(MutationOptions(document: authMutation));
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      HomePage(
-                        username: _usernameController.text,
-                        url: link,
-                      ),
+            String token = result.data['tokenAuth']['token'];
+            final AuthLink authLink = AuthLink(
+              getToken: () async => 'JWT $token',
+            );
+            final Link link = authLink.concat(httpLink);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  username: _usernameController.text,
+                  url: link,
                 ),
-              );
-            }
-            else {
-              Toast.show('Please enter the required fields', context, duration: Toast.LENGTH_LONG, gravity:Toast.BOTTOM);
-            }
+              ),
+            );
           },
         ));
-
   }
 
   Widget _buildSignInWithText() {
@@ -303,4 +295,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
