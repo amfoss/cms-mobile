@@ -34,6 +34,7 @@ dependencies:
   flutter_icons: ^1.1.0
   flutter_offline: ^0.3.0
   toast: ^0.1.5
+  provider: ^4.0.5
 
 dev_dependencies:
   flutter_test:

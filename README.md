@@ -79,6 +79,8 @@ samples, guidance on mobile development, and a full API reference.
 
 [toast](https://pub.dev/packages/toast): 0.1.5
 
+[provider](https://pub.dev/packages/provider): 4.0.5
+
 ## Get in Touch
 
 To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms-mobile/-/issues/). 

@@ -4,7 +4,10 @@ import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
+
+import '../data/user_database.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -151,6 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           onPressed: () async {
+            final db = Provider.of<AppDatabase>(context, listen: false);
             if (_usernameController.text.isNotEmpty &&
                 _passwordController.text.isNotEmpty) {
               final String authMutation = '''
@@ -177,15 +181,22 @@ class _LoginScreenState extends State<LoginScreen> {
               );
               final Link link = authLink.concat(httpLink);
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(
-                    username: _usernameController.text,
-                    url: link,
-                  ),
-                ),
-              );
+              User user =
+                  User(authToken: token, username: _usernameController.text);
+              db.getSingleUser().then((userFromDb) {
+                if (userFromDb == null)
+                  db.insertUser(user).then((onValue) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(
+                          username: _usernameController.text,
+                          url: link,
+                        ),
+                      ),
+                    );
+                  });
+              });
             } else {
               Toast.show("Please enter the required fields", context,
                   duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
