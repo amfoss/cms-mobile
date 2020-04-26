@@ -33,7 +33,7 @@ dependencies:
   fl_chart: ^0.9.0
   flutter_icons: ^1.1.0
   flutter_offline: ^0.3.0
-  fluttertoast: 4.0.1
+  toast: ^0.1.5
 
 dev_dependencies:
   flutter_test:
