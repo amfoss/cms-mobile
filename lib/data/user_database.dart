@@ -13,6 +13,9 @@ class Users extends Table {
   TextColumn get username => text().nullable()();
   TextColumn get authToken => text().nullable()();
   TextColumn get refreshToken => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {username};
 }
 
 @UseMoor(tables: [Users])

@@ -1,5 +1,7 @@
+import 'package:cms_mobile/data/user_database.dart';
 import 'package:cms_mobile/screens/attendance/statistics/attendance_stats.dart';
 import 'package:cms_mobile/screens/home.dart';
+import 'package:cms_mobile/screens/login_screen.dart';
 import 'package:cms_mobile/screens/profile/about.dart';
 import 'package:cms_mobile/screens/profile/update_profile.dart';
 import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_graphs.dart';
@@ -8,6 +10,7 @@ import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -69,6 +72,11 @@ class _AppDrawerState extends State<AppDrawer> {
                       builder: (context) =>
                           UserUpdates(HomePageScreen.username)))),
           Divider(),
+          _createDrawerItem(
+              icon: Icons.exit_to_app,
+              text: 'Logout',
+              onTap: () => logout()),
+          Divider(),
           _createDrawerItem(icon: Icons.bug_report, text: 'Report an issue'),
           ListTile(
             title: Text('0.0.1'),
@@ -77,6 +85,18 @@ class _AppDrawerState extends State<AppDrawer> {
         ],
       ),
     );
+  }
+
+  void logout() {
+    final db = Provider.of<AppDatabase>(context, listen: false);
+    db.getSingleUser().then((userFromDb) {
+      db.deleteUser(userFromDb).then((onValue) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      });
+    });
   }
 
   Widget _createDrawerItem(
