@@ -8,6 +8,7 @@ import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_graphs.
 import 'package:cms_mobile/screens/statusUpdate/statistics/status_update_stats.dart';
 import 'package:cms_mobile/screens/statusUpdate/userUpdates.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Drawer(
       child: ListView(
         padding: new EdgeInsets.only(top: 50),
@@ -52,10 +54,8 @@ class _AppDrawerState extends State<AppDrawer> {
           _createDrawerItem(
               icon: FlutterIcons.graph_trend_fou,
               text: 'Attendance Stats',
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AttendanceStats()))),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AttendanceStats()))),
           _createDrawerItem(
               icon: FlutterIcons.graph_oct,
               text: 'Status Updates Overview',
@@ -73,9 +73,14 @@ class _AppDrawerState extends State<AppDrawer> {
                           UserUpdates(HomePageScreen.username)))),
           Divider(),
           _createDrawerItem(
-              icon: Icons.exit_to_app,
-              text: 'Logout',
-              onTap: () => logout()),
+              icon: themeChange.darkTheme
+                  ? FlutterIcons.weather_sunny_mco
+                  : FlutterIcons.weather_night_mco,
+              text: themeChange.darkTheme ? 'Light Mode' : 'Dark Mode',
+              onTap: () => darkMode(themeChange)),
+          Divider(),
+          _createDrawerItem(
+              icon: Icons.exit_to_app, text: 'Logout', onTap: () => logout()),
           Divider(),
           _createDrawerItem(icon: Icons.bug_report, text: 'Report an issue'),
           ListTile(
@@ -85,6 +90,14 @@ class _AppDrawerState extends State<AppDrawer> {
         ],
       ),
     );
+  }
+
+  void darkMode(DarkThemeProvider themeChange) {
+    if (themeChange.darkTheme) {
+      themeChange.darkTheme = false;
+    } else {
+      themeChange.darkTheme = true;
+    }
   }
 
   void logout() {

@@ -1,35 +1,36 @@
 import 'package:cms_mobile/utilities/sizeconfig.dart';
+import 'package:cms_mobile/utilities/theme_provider.dart';
 import 'package:flutter/material.dart';
 
 final kHintTextStyle = TextStyle(
-  color: Colors.black54,
+  color: getCurrentAppTheme() != null ? Colors.white54 : Colors.black54,
   fontFamily: 'OpenSans',
 );
 
 final appPrimaryColor = Color(0xFFFFA538);
 
 final kLabelStyle = TextStyle(
-  color: Colors.black,
+  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final messageLabelStyle = TextStyle(
-  color: Colors.black,
+  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontSize: 20,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final userUpdateHeadings = TextStyle(
-  color: Colors.black,
+  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontSize: 16,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final CMSLabelStyle = TextStyle(
-  color: Colors.black,
+  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontWeight: FontWeight.bold,
   fontStyle: FontStyle.italic,
   fontFamily: 'OpenSans',
@@ -38,7 +39,7 @@ final CMSLabelStyle = TextStyle(
 final List<String> choices = <String>["Select Date", "Messages List"];
 
 final kBoxDecorationStyle = BoxDecoration(
-  color: Colors.black12,
+  color: getCurrentAppTheme() != null ? Colors.white12 : Colors.black12,
   borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 10.0),
   boxShadow: [
     BoxShadow(
@@ -48,3 +49,8 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+Future<bool> getCurrentAppTheme() async {
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+  return await themeChangeProvider.darkThemePreference.getTheme();
+}
