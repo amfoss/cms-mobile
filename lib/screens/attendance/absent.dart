@@ -55,6 +55,7 @@ class AttendanceAbsent extends State<MembersAbsent> {
     final attendance = result.data['dailyAttendance'];
     final membersAbsent = attendance['membersAbsent'];
     return ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 16),
         itemCount: membersAbsent.length,
         itemBuilder: (context, index) {
           String url = attendance['membersAbsent'][index]['member']['avatar']

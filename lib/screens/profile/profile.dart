@@ -30,18 +30,19 @@ class _Profile extends State<Profile> {
   Widget build(BuildContext context) {
     return OfflineBuilder(
       debounceDuration: Duration.zero,
-      connectivityBuilder: (BuildContext context,
-          ConnectivityResult connectivity,
-          Widget child,) {
+      connectivityBuilder: (
+        BuildContext context,
+        ConnectivityResult connectivity,
+        Widget child,
+      ) {
         if (connectivity == ConnectivityResult.none) {
           isConnection = false;
         } else {
           if (isConnection == false) {
             final snackBar =
-            SnackBar(content: Text('Your internet is live again'));
+                SnackBar(content: Text('Your internet is live again'));
             _scaffoldKey.currentState.showSnackBar(snackBar);
-            SchedulerBinding.instance.addPostFrameCallback((_) =>
-                setState(() {
+            SchedulerBinding.instance.addPostFrameCallback((_) => setState(() {
                   isConnection = true;
                 }));
           }
@@ -129,8 +130,12 @@ class _Profile extends State<Profile> {
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text('${nameList['fullName']}',
-                        style: Theme.of(context).textTheme.headline),
+                    Container(
+                      padding: EdgeInsets.only(left: 4),
+                      margin: EdgeInsets.only(left: 8),
+                      child: new Text('${nameList['fullName']}',
+                          style: Theme.of(context).textTheme.headline),
+                    ),
                     Row(
                       children: <Widget>[
                         IconButton(

@@ -52,6 +52,7 @@ class MembersSentTab extends State<MembersSent> {
     final membersSentList = result.data['dailyStatusUpdates'];
     final membersPresent = membersSentList['membersSent'];
     return ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 10),
         itemCount: membersPresent.length,
         itemBuilder: (context, index) {
           String url = membersSentList['membersSent'][index]['member']['avatar']

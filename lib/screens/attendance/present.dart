@@ -56,6 +56,7 @@ class AttendancePresent extends State<MembersPresent> {
     final attendance = result.data['dailyAttendance'];
     final membersPresent = attendance['membersPresent'];
     return ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 16),
         itemCount: membersPresent.length,
         itemBuilder: (context, index) {
           String url = attendance['membersPresent'][index]['member']['avatar']
@@ -65,11 +66,12 @@ class AttendancePresent extends State<MembersPresent> {
           }
           return ListTile(
             leading: new CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.grey,
-              backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(url, attendance['membersPresent'][index]['member']['profile']
-              ['profilePic']))
-            ),
+                radius: 30,
+                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
+                    url,
+                    attendance['membersPresent'][index]['member']['profile']
+                        ['profilePic']))),
             title:
                 Text(attendance['membersPresent'][index]['member']['fullName']),
             subtitle: Text(

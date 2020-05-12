@@ -57,6 +57,7 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
     final membersDidNotSentList = result.data['dailyStatusUpdates'];
     final membersPresent = membersDidNotSentList['memberDidNotSend'];
     return ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 10),
         itemCount: membersPresent.length,
         itemBuilder: (context, index) {
           String url = membersDidNotSentList['memberDidNotSend'][index]
