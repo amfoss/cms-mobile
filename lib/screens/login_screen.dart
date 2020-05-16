@@ -26,12 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
       children: <Widget>[
         Text(
           'Username',
-          style: kLabelStyle,
+          style: loginLabelStyle,
         ),
         SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: loginBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.black,
               ),
               hintText: 'Enter your Username',
-              hintStyle: kHintTextStyle,
+              hintStyle: loginHintTextStyle,
             ),
           ),
         ),
@@ -63,12 +63,12 @@ class _LoginScreenState extends State<LoginScreen> {
       children: <Widget>[
         Text(
           'Password',
-          style: kLabelStyle,
+          style: loginLabelStyle,
         ),
         SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
+          decoration: loginBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
           child: TextFormField(
             controller: _passwordController,
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.black,
               ),
               hintText: 'Enter your Password',
-              hintStyle: kHintTextStyle,
+              hintStyle: loginHintTextStyle,
               suffixIcon: IconButton(
                 icon: Icon(
                   passwordInvisible ? Icons.visibility_off : Icons.visibility,
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Text(
             'Remember me',
-            style: kLabelStyle,
+            style: loginLabelStyle,
           ),
         ],
       ),
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(height: SizeConfig.heightFactor * 20.0),
         Text(
           'Powered by CMS',
-          style: CMSLabelStyle,
+          style: loginCMSLabelStyle,
         ),
       ],
     );
@@ -222,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.only(bottom: 60),
       child: Text(
         'From',
-        style: kLabelStyle,
+        style: loginLabelStyle,
       ),
     );
   }
