@@ -19,6 +19,62 @@ class _LoginScreenState extends State<LoginScreen> {
   bool passwordInvisible = true;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+  FocusNode _usernameFocus = new FocusNode();
+  FocusNode _passwordFocus = new FocusNode();
+
+  _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  _onLoginPress() async {
+    final db = Provider.of<AppDatabase>(context, listen: false);
+    if (_usernameController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      final String authMutation = '''
+                        mutation{
+                          tokenAuth(username:"${_usernameController.text}", password:"${_passwordController.text}") {
+                            token
+                            }
+                        }
+                        ''';
+
+      final HttpLink httpLink = HttpLink(
+        uri: 'https://api.amfoss.in/',
+      );
+      GraphQLClient _client = GraphQLClient(
+          link: httpLink,
+          cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject));
+      QueryResult result =
+          await _client.mutate(MutationOptions(document: authMutation));
+
+      String token = result.data['tokenAuth']['token'];
+      final AuthLink authLink = AuthLink(
+        getToken: () async => 'JWT $token',
+      );
+      final Link link = authLink.concat(httpLink);
+
+      User user = User(authToken: token, username: _usernameController.text);
+      db.getSingleUser().then((userFromDb) {
+        if (userFromDb == null)
+          db.insertUser(user).then((onValue) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(
+                  username: _usernameController.text,
+                  url: link,
+                ),
+              ),
+            );
+          });
+      });
+    } else {
+      Toast.show("Please enter the required fields", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    }
+  }
 
   Widget _buildEmailTF() {
     return Column(
@@ -36,6 +92,11 @@ class _LoginScreenState extends State<LoginScreen> {
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
             controller: _usernameController,
+            textInputAction: TextInputAction.next,
+            focusNode: _usernameFocus,
+            onFieldSubmitted: (term) {
+              _fieldFocusChange(context, _usernameFocus, _passwordFocus);
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
@@ -72,6 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
           height: SizeConfig.heightFactor * 60.0,
           child: TextFormField(
             controller: _passwordController,
+            textInputAction: TextInputAction.done,
+            focusNode: _passwordFocus,
+            onFieldSubmitted: (value) {
+              _passwordFocus.unfocus();
+              _onLoginPress();
+            },
             obscureText: passwordInvisible,
             style: TextStyle(
               color: Colors.white,
@@ -153,55 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
               fontFamily: 'OpenSans',
             ),
           ),
-          onPressed: () async {
-            final db = Provider.of<AppDatabase>(context, listen: false);
-            if (_usernameController.text.isNotEmpty &&
-                _passwordController.text.isNotEmpty) {
-              final String authMutation = '''
-                        mutation{
-                          tokenAuth(username:"${_usernameController.text}", password:"${_passwordController.text}") {
-                            token
-                            }
-                        }
-                        ''';
-
-              final HttpLink httpLink = HttpLink(
-                uri: 'https://api.amfoss.in/',
-              );
-              GraphQLClient _client = GraphQLClient(
-                  link: httpLink,
-                  cache: OptimisticCache(
-                      dataIdFromObject: typenameDataIdFromObject));
-              QueryResult result =
-                  await _client.mutate(MutationOptions(document: authMutation));
-
-              String token = result.data['tokenAuth']['token'];
-              final AuthLink authLink = AuthLink(
-                getToken: () async => 'JWT $token',
-              );
-              final Link link = authLink.concat(httpLink);
-
-              User user =
-                  User(authToken: token, username: _usernameController.text);
-              db.getSingleUser().then((userFromDb) {
-                if (userFromDb == null)
-                  db.insertUser(user).then((onValue) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                          username: _usernameController.text,
-                          url: link,
-                        ),
-                      ),
-                    );
-                  });
-              });
-            } else {
-              Toast.show("Please enter the required fields", context,
-                  duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-            }
-          },
+          onPressed: _onLoginPress,
         ));
   }
 
