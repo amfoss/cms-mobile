@@ -72,6 +72,8 @@ flutter:
   #  - images/a_dot_ham.jpeg
   assets:
    - assets/images/amfoss.jpg
+   - assets/images/amfoss_dark.jpg
+   - assets/images/cms.jpg
    - assets/launcher/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

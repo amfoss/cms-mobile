@@ -58,17 +58,17 @@ Future<bool> getCurrentAppTheme() async {
 //Login screen constants
 
 final loginLabelStyle = TextStyle(
-  color: Colors.black,
+  color: Colors.white,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final loginBoxDecorationStyle = BoxDecoration(
-  color: Colors.black12,
+  color: Colors.white12,
   borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 10.0),
   boxShadow: [
     BoxShadow(
-      color: Colors.white,
+      color: Colors.black,
       blurRadius: SizeConfig.aspectRation * 6.0,
       offset: Offset(0, 2),
     ),
@@ -76,12 +76,12 @@ final loginBoxDecorationStyle = BoxDecoration(
 );
 
 final loginHintTextStyle = TextStyle(
-  color: Colors.black54,
+  color: Colors.white54,
   fontFamily: 'OpenSans',
 );
 
 final loginCMSLabelStyle = TextStyle(
-  color: Colors.black,
+  color: Colors.white,
   fontWeight: FontWeight.bold,
   fontStyle: FontStyle.italic,
   fontFamily: 'OpenSans',

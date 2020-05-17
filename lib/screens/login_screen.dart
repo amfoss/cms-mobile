@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
             keyboardType: TextInputType.emailAddress,
             controller: _usernameController,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.account_circle,
-                color: Colors.black,
+                color: Colors.white54,
               ),
               hintText: 'Enter your Username',
               hintStyle: loginHintTextStyle,
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _passwordController,
             obscureText: passwordInvisible,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
@@ -83,14 +83,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.black,
+                color: Colors.white54,
               ),
               hintText: 'Enter your Password',
               hintStyle: loginHintTextStyle,
               suffixIcon: IconButton(
                 icon: Icon(
                   passwordInvisible ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.black,
+                  color: Colors.white54,
                 ),
                 onPressed: () {
                   setState(() {
@@ -205,18 +205,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-        SizedBox(height: SizeConfig.heightFactor * 20.0),
-        Text(
-          'Powered by CMS',
-          style: loginCMSLabelStyle,
-        ),
-      ],
-    );
-  }
-
   Widget _buildFromText() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 60),
@@ -231,10 +219,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Image.asset(
-        'assets/images/amfoss.jpg',
+        'assets/images/amfoss_dark.jpg',
         width: SizeConfig.screenWidth / 2.5,
         alignment: Alignment.bottomCenter,
       ),
+    );
+  }
+
+  Widget _buildLogoCMS() {
+    return Image.asset(
+      'assets/images/cms.jpg',
+      width: SizeConfig.screenWidth / 1.5,
+      alignment: Alignment.topCenter,
     );
   }
 
@@ -264,10 +260,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white,
-                      Colors.white,
-                      Colors.white,
-                      Colors.white,
+                      Colors.black,
+                      Colors.black,
+                      Colors.black,
+                      Colors.black,
                     ],
                     stops: [0.1, 0.4, 0.7, 0.9],
                   ),
@@ -281,6 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    _buildLogoCMS(),
                     SizedBox(height: SizeConfig.heightFactor * 30.0),
                     _buildEmailTF(),
                     SizedBox(
@@ -293,7 +290,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: SizeConfig.heightFactor * 30,
                     ),
                     _buildLoginBtn(),
-                    _buildSignInWithText(),
                   ],
                 ),
               ),
