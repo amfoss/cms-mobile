@@ -36,7 +36,7 @@ In order to run the project, you will need the Flutter SKD setup up. If this is 
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
+For help getting started with Flutter, view the Flutter 
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
@@ -44,14 +44,14 @@ samples, guidance on mobile development, and a full API reference.
 
 <table border="0">
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532766-6d2c2280-7805-11ea-822f-06896ffbcd74.png" width="300"></td>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532340-b0d25c80-7804-11ea-92cb-5b3ed6f311db.png" width="300"></td>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532385-c6478680-7804-11ea-9e0c-cc84dd160bad.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85025069-87cf3000-b194-11ea-9d7d-0c9dffe9738b.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85025107-91589800-b194-11ea-802d-f4a6ce307f55.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85025124-987fa600-b194-11ea-971f-db32abb048c8.png" width="300"></td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532418-d6f7fc80-7804-11ea-95ab-8a8c42562e74.png" width="300"></td>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532471-eecf8080-7804-11ea-8b67-12b4c23a1e90.png" width="300"></td>
-    <td><img src="https://user-images.githubusercontent.com/41234408/78532545-10c90300-7805-11ea-8342-3cfd1bb1d190.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85027884-0e394100-b198-11ea-8d13-038c06d13b16.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85027873-0b3e5080-b198-11ea-9901-3793dee23fdd.png" width="300"></td>
+    <td><img src="https://user-images.githubusercontent.com/20596763/85027853-07123300-b198-11ea-8714-eda3f80f3082.png" width="300"></td>
   </tr>
 </table>
 
@@ -87,4 +87,4 @@ To contact us, you can create an issue over [here](https://gitlab.com/amfoss/cms
 You can also participate in technical discussions and ask your doubts on the [IRC Freenode](https://webchat.freenode.net/). Just join in and participate in the discussions at the #amfoss channel.
 
 ## License
-This project is licensed under the [GNU General Public License v3.0](https://gitlab.com/amfoss/TempleApp/blob/master/LICENSE).
+This project is licensed under the [GNU General Public License v3.0](https://gitlab.com/amfoss/cms-mobile/blob/master/LICENSE).
