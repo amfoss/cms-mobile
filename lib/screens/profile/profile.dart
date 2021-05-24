@@ -52,7 +52,7 @@ class _Profile extends State<Profile> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         endDrawer: AppDrawer(),
         appBar: AppBar(
           backgroundColor: appPrimaryColor,
