@@ -254,6 +254,9 @@ class _Profile extends State<Profile> {
   }
 
   String _getFormatedDate(String date) {
+    if(date == null){
+      return "No Info";
+    }
     var formmatedTime =
         DateFormat("HH:mm:ss").parse(date.substring(11, 19), true);
     var dateLocal = formmatedTime.toLocal();

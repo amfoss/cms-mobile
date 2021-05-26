@@ -20,7 +20,6 @@ class AttendancePresent extends State<MembersPresent> {
 
   AttendancePresent(DateTime selectedDate) {
     this.selectedDate = selectedDate;
-    build(context);
   }
 
   @override
