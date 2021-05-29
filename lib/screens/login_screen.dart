@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   bool passwordInvisible = true;
   bool userExist = false;
+  String refreshCred;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   FocusNode _usernameFocus = new FocusNode();
@@ -61,8 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
         getToken: () async => 'JWT $token',
       );
       final Link link = authLink.concat(httpLink);
+      refreshCred = _usernameController.text + " " + _passwordController.text;
 
-      User user = User(authToken: token, username: _usernameController.text);
+      User user = User(authToken: token, username: _usernameController.text, refreshToken: refreshCred);
       db.getSingleUser().then((userFromDb) {
         if(!userExist){
           Toast.show("Invalid username or password", context,

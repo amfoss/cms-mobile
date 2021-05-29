@@ -14,6 +14,10 @@ class CMS extends StatefulWidget {
 class _CMS extends State<CMS> {
   Link link;
   String username;
+  String token;
+  final HttpLink httpLink = HttpLink(
+    uri: 'https://api.amfoss.in/',
+  );
   @override
   Widget build(BuildContext context) {
     final db = Provider.of<AppDatabase>(context, listen: false);
@@ -25,15 +29,20 @@ class _CMS extends State<CMS> {
         else if (snapshot.data == null)
           return LoginScreen();
         else if (snapshot.hasData) {
-          final httpLink = HttpLink(
-            uri: 'https://api.amfoss.in/',
-          );
-          String token = snapshot.data.authToken;
+          final refreshCred = snapshot.data.refreshToken;
+          if(refreshCred == null){
+            return LoginScreen();
+          }
+          final split = refreshCred.split(' ');
+          final username = snapshot.data.username;
+          final password = split[1];
+          setToken(username, password).then((value){
+            token = value;
+          });
           final AuthLink authLink = AuthLink(
             getToken: () async => 'JWT $token',
           );
           link = authLink.concat(httpLink);
-          username = snapshot.data.username;
           return HomePage(
             username: username,
             url: link,
@@ -42,5 +51,24 @@ class _CMS extends State<CMS> {
           return Container(color: Colors.white,);
       },
     );
+  }
+
+  setToken(String username, String password) async{
+    final String authMutation = '''
+                        mutation{
+                          tokenAuth(username:"$username", password:"$password") {
+                            token
+                            }
+                        }
+                        ''';
+
+    GraphQLClient _client = GraphQLClient(
+        link: httpLink,
+        cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject));
+    QueryResult result =
+    await _client.mutate(MutationOptions(document: authMutation));
+
+    String refreshedToken = result.data['tokenAuth']['token'];
+    return refreshedToken;
   }
 }
