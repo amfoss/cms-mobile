@@ -17,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
   bool passwordInvisible = true;
+  bool userExist = false;
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
   FocusNode _usernameFocus = new FocusNode();
@@ -46,10 +47,16 @@ class _LoginScreenState extends State<LoginScreen> {
       GraphQLClient _client = GraphQLClient(
           link: httpLink,
           cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject));
-      QueryResult result =
-          await _client.mutate(MutationOptions(document: authMutation));
+      QueryResult result;
+      String token;
+      try {
+        result = await _client.mutate(MutationOptions(document: authMutation));
+        token = result.data['tokenAuth']['token'];
+        userExist = true;
+      }on NoSuchMethodError catch(e){
+        print(e);
+      }
 
-      String token = result.data['tokenAuth']['token'];
       final AuthLink authLink = AuthLink(
         getToken: () async => 'JWT $token',
       );
@@ -57,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       User user = User(authToken: token, username: _usernameController.text);
       db.getSingleUser().then((userFromDb) {
-        if (userFromDb == null)
+        if(!userExist){
+          Toast.show("Invalid username or password", context,
+              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        }else if (userFromDb == null)
           db.insertUser(user).then((onValue) {
             Navigator.pushReplacement(
               context,
