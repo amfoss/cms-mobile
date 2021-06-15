@@ -248,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Image.asset(
-        'assets/images/amfoss_dark.jpg',
+        'assets/images/amfoss.png',
         width: SizeConfig.screenWidth / 2.5,
         alignment: Alignment.bottomCenter,
       ),

@@ -1,6 +1,8 @@
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/theme_provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utilities/sizeconfig.dart';
@@ -11,28 +13,30 @@ class About extends StatefulWidget {
 }
 
 class _AboutScreen extends State<About> {
+
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<DarkThemeProvider>(context).darkTheme;
     return Scaffold(
       appBar: AppBar(backgroundColor: appPrimaryColor, title: Text("About")),
       body: Column(
         children: <Widget>[
           _appIcon(),
-          _amFOSSLogo(),
+          _amFOSSLogo(currentTheme),
           _aboutText(
               "This is a flutter application for the amFOSS CMS. Club members can login into the CMS using the app and view club attendence, their profile and status updates.",
               null,
-              null),
+              null,currentTheme),
           _aboutText(
               "amFOSS is a student-run community with over 50+ members from Amrita Vishwa Vidyapeetham, Amritapuri. Know more about us ",
               "here",
-              "https://amfoss.in"),
+              "https://amfoss.in",currentTheme),
           _links(Icons.code, 'The app is open source, with the code ', "here",
-              "https://gitlab.com/amfoss/cms-mobile"),
+              "https://gitlab.com/amfoss/cms-mobile", currentTheme),
           _links(Icons.error, "Issues can be reported ", "here",
-              "https://gitlab.com/amfoss/cms-mobile/-/issues"),
+              "https://gitlab.com/amfoss/cms-mobile/-/issues",currentTheme),
           _links(Icons.person_outline, "App developers can be found ", "here",
-              "https://gitlab.com/amfoss/cms-mobile/-/graphs/master")
+              "https://gitlab.com/amfoss/cms-mobile/-/graphs/master",currentTheme)
         ],
       ),
     );
@@ -46,22 +50,22 @@ class _AboutScreen extends State<About> {
     );
   }
 
-  Widget _amFOSSLogo() {
+  Widget _amFOSSLogo(bool theme) {
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 20),
-      child: Image.asset('assets/images/amfoss.jpg'),
+      child:  theme ? Image.asset('assets/images/amfoss.png'):Image.asset('assets/images/amfoss_dark.png') ,
       width: SizeConfig.screenWidth / 2.5,
     );
   }
 
-  Widget _aboutText(String normalText, String richText, String url) {
+  Widget _aboutText(String normalText, String richText, String url, bool theme) {
     return ListTile(
       title: new RichText(
         text: new TextSpan(
           children: [
             new TextSpan(
               text: normalText,
-              style: new TextStyle(color: Colors.black, fontSize: 14),
+              style: new TextStyle(color: theme? Colors.white : Colors.black, fontSize: 14),
             ),
             new TextSpan(
               text: richText,
@@ -77,7 +81,7 @@ class _AboutScreen extends State<About> {
     );
   }
 
-  Widget _links(IconData icon, String normalText, String richText, String url) {
+  Widget _links(IconData icon, String normalText, String richText, String url, bool theme) {
     return ListTile(
       leading: Icon(icon),
       title: new RichText(
@@ -85,7 +89,7 @@ class _AboutScreen extends State<About> {
           children: [
             new TextSpan(
               text: normalText,
-              style: new TextStyle(color: Colors.black, fontSize: 14),
+              style: new TextStyle(color: theme ? Colors.white : Colors.black, fontSize: 14),
             ),
             new TextSpan(
               text: richText,

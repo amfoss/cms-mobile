@@ -10,20 +10,17 @@ final kHintTextStyle = TextStyle(
 final appPrimaryColor = Color(0xFFFFA538);
 
 final kLabelStyle = TextStyle(
-  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final messageLabelStyle = TextStyle(
-  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontSize: 20,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',
 );
 
 final userUpdateHeadings = TextStyle(
-  color: getCurrentAppTheme() != null ? Colors.white : Colors.black,
   fontSize: 16,
   fontWeight: FontWeight.bold,
   fontFamily: 'OpenSans',

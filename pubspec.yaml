@@ -71,8 +71,8 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-   - assets/images/amfoss.jpg
-   - assets/images/amfoss_dark.jpg
+   - assets/images/amfoss.png
+   - assets/images/amfoss_dark.png
    - assets/images/cms.jpg
    - assets/launcher/icon.png
 
