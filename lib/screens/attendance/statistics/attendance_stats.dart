@@ -1,7 +1,6 @@
 import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_offline/flutter_offline.dart';
@@ -20,7 +19,7 @@ class _AttendanceStats extends State<AttendanceStats>
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   DateTime initialDate = DateTime.now().subtract(Duration(days: 7));
-  DateTime lastDate = new DateTime.now();
+  DateTime lastDate =  DateTime.now();
 
   @override
   void initState() {
@@ -91,7 +90,10 @@ class _AttendanceStats extends State<AttendanceStats>
             ),
             leading: IconButton(
               icon: new Icon(Icons.calendar_today),
-              onPressed: () => _selectDateRange(),
+                onPressed: () {
+                  setState(() {
+                    dateTimeRangePicker();
+                  });}
             ),
           ),
           body: Query(
@@ -125,22 +127,22 @@ class _AttendanceStats extends State<AttendanceStats>
     );
   }
 
-  Future<Null> _selectDateRange() async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+  dateTimeRangePicker() async {
+    DateTimeRange picked = await showDateRangePicker(
         context: context,
-        initialFirstDate: new DateTime.now().subtract(Duration(days: 7)),
-        initialLastDate: (new DateTime.now()),
-        firstDate: new DateTime(2015),
-        lastDate: DateTime.now());
-    if (picked != null && picked.length == 2) {
-      print(picked);
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: lastDate,
+        initialDateRange: DateTimeRange(
+          end: lastDate,
+          start: initialDate));
+    if (picked != null)
       setState(() {
-        initialDate = picked[0];
-        lastDate = picked[1];
+        lastDate = picked.end;
+        initialDate = picked.start;
       });
-    }
+    build(context);
   }
-
+  
   @override
   void dispose() {
     tabController.dispose();

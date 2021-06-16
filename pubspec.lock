@@ -220,13 +220,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.4"
-  date_range_picker:
-    dependency: "direct main"
-    description:
-      name: date_range_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.7"
   equatable:
     dependency: transitive
     description:

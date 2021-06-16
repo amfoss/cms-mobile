@@ -2,7 +2,6 @@ import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/ColorGenerator.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/indicator.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -93,7 +92,10 @@ class _StatusUpdateGraphs extends State<StatusUpdateGraphs>
             ),
             leading: IconButton(
               icon: new Icon(Icons.calendar_today),
-              onPressed: () => _selectDateRange(),
+              onPressed: () {
+              setState(() {
+              dateTimeRangePicker();
+              });}
             ),
           ),
           body: Query(
@@ -130,20 +132,20 @@ class _StatusUpdateGraphs extends State<StatusUpdateGraphs>
     );
   }
 
-  Future<Null> _selectDateRange() async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+  dateTimeRangePicker() async {
+    DateTimeRange picked = await showDateRangePicker(
         context: context,
-        initialFirstDate: new DateTime.now().subtract(Duration(days: 7)),
-        initialLastDate: (DateTime.now().subtract(Duration(hours: 29))),
-        firstDate: new DateTime(2015),
-        lastDate: DateTime.now().subtract(Duration(hours: 29)));
-    if (picked != null && picked.length == 2) {
-      print(picked);
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: lastDate,
+        initialDateRange: DateTimeRange(
+            end: lastDate,
+            start: initialDate));
+    if (picked != null)
       setState(() {
-        initialDate = picked[0];
-        lastDate = picked[1];
+        lastDate = picked.end;
+        initialDate = picked.start;
       });
-    }
+    build(context);
   }
 
   @override
