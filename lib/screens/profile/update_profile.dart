@@ -3,6 +3,7 @@ import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -42,6 +43,7 @@ class UpdateProfileScreen extends State<UpdateProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = getTheme(context);
     final ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
       GraphQLClient(link: HomePageScreen.url, cache: InMemoryCache()),
     );
@@ -110,37 +112,37 @@ class UpdateProfileScreen extends State<UpdateProfile> {
               print(result.data['profile']);
               _fillTextFormFields(result);
               return Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.widthFactor * 30.0,
-                    vertical: SizeConfig.widthFactor * 20.0),
                 height: double.infinity,
                 child: ListView(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.widthFactor * 30.0,
+                      vertical: SizeConfig.widthFactor * 20.0),
                   children: <Widget>[
                     _buildTextField(
-                        "username", "Enter your username", _usernameController),
+                        "Username", "Enter your username", _usernameController, theme, FlutterIcons.person_mdi),
                     _buildTextField("First Name", "Enter your First Name",
-                        _firstNameController),
+                        _firstNameController, theme, FlutterIcons.first_page_mdi),
                     _buildTextField("Last Name", "Enter your Last Name",
-                        _lastNameController),
+                        _lastNameController, theme, FlutterIcons.last_page_mdi),
                     _buildTextField(
-                        "Email", "Enter your Email", _emailController),
+                        "Email", "Enter your Email", _emailController, theme, Icons.email),
                     _buildTextField("Custom Email", "Enter your Custom Email",
-                        _customEmailController),
+                        _customEmailController, theme, Icons.alternate_email),
                     _buildTextField("Phone Number", "Enter your Phone Number",
-                        _phoneNumberController),
+                        _phoneNumberController, theme, Icons.phone),
                     _buildTextField(
                         "GitHub Username",
                         "Enter your GitHub username",
-                        _githubUsernameController),
+                        _githubUsernameController, theme, FlutterIcons.github_faw5d),
                     _buildTextField(
                         "GitLab Username",
                         "Enter your GitLab username",
-                        _gitlabUsernameController),
+                        _gitlabUsernameController, theme, FlutterIcons.gitlab_faw5d),
                     _buildTextField("Roll Number", "Enter your Roll number",
-                        _rollNumberController),
+                        _rollNumberController, theme, FlutterIcons.list_alt_faw),
                     _buildTextField(
-                        "Batch", "Enter your Batch", _batchController),
-                    _buildTextField("About", "Enter About", _aboutController),
+                        "Batch", "Enter your Batch", _batchController, theme, FlutterIcons.graduation_cap_faw),
+                    _buildTextField("About", "Enter About", _aboutController, theme, FlutterIcons.info_outline_mdi),
                     _buildUpdateBtn(graphQLClient, context),
                   ],
                 ),
@@ -198,7 +200,7 @@ class UpdateProfileScreen extends State<UpdateProfile> {
             style: TextStyle(
               color: Colors.black,
               letterSpacing: SizeConfig.widthFactor * 1.5,
-              fontSize: SizeConfig.widthFactor * 18.0,
+              fontSize: SizeConfig.widthFactor * 16.0,
               fontWeight: FontWeight.bold,
               fontFamily: 'OpenSans',
             ),
@@ -224,7 +226,7 @@ class UpdateProfileScreen extends State<UpdateProfile> {
   }
 
   Widget _buildTextField(String title, String hintText,
-      TextEditingController textEditingController) {
+      TextEditingController textEditingController, bool theme, IconData icon) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -235,22 +237,31 @@ class UpdateProfileScreen extends State<UpdateProfile> {
         SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: SizeConfig.heightFactor * 60.0,
+          height: SizeConfig.heightFactor * 50.0,
           child: TextField(
             keyboardType: TextInputType.emailAddress,
             controller: textEditingController,
             style: TextStyle(
-              color: Colors.black,
+              color: theme ? Colors.white : Colors.black,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.widthFactor * 10.0,
-                  vertical: SizeConfig.heightFactor * 10),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+                borderRadius: BorderRadius.all(Radius.circular(30))
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.amber),
+                borderRadius: BorderRadius.all(Radius.circular(30))
+              ),
+              prefixIcon: Icon(icon,color: theme ? Colors.white : Colors.black,),
+              filled: true,
+              fillColor: theme ? Colors.grey[1000] :Colors.grey[200],
               hintText: hintText,
-              hintStyle: kHintTextStyle,
+              hintStyle: TextStyle(
+                color: theme ? Colors.white38 : Colors.black38,
+                fontFamily: 'OpenSans'
+              ),
             ),
           ),
         ),

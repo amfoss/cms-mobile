@@ -1,9 +1,10 @@
 import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:cms_mobile/utilities/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 final kHintTextStyle = TextStyle(
-  color: getCurrentAppTheme() != null ? Colors.white54 : Colors.black54,
+    color: getCurrentAppTheme() != null ? Colors.white54 : Colors.black54,
   fontFamily: 'OpenSans',
 );
 
@@ -83,3 +84,7 @@ final loginCMSLabelStyle = TextStyle(
   fontStyle: FontStyle.italic,
   fontFamily: 'OpenSans',
 );
+
+bool getTheme(BuildContext context){
+  return Provider.of<DarkThemeProvider>(context).darkTheme;
+}
