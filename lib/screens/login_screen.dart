@@ -144,6 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: loginBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
           child: TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            enableSuggestions: false,
+            autocorrect: false,
             controller: _passwordController,
             textInputAction: TextInputAction.done,
             focusNode: _passwordFocus,
