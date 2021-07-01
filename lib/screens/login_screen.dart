@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _rememberMe = false;
   bool passwordInvisible = true;
   bool userExist = false;
   String refreshCred;
@@ -92,21 +91,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Username',
-          style: loginLabelStyle,
-        ),
-        SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: loginBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
-          child: TextFormField(
+          child: TextField(
             keyboardType: TextInputType.emailAddress,
             controller: _usernameController,
             textInputAction: TextInputAction.next,
             focusNode: _usernameFocus,
-            onFieldSubmitted: (term) {
+            onSubmitted: (term) {
               _fieldFocusChange(context, _usernameFocus, _passwordFocus);
             },
             style: TextStyle(
@@ -114,14 +107,23 @@ class _LoginScreenState extends State<LoginScreen> {
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
-              border: InputBorder.none,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                  )
+              ),
               contentPadding:
                   EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.account_circle,
-                color: Colors.white54,
+                color: Theme.of(context).accentColor,
               ),
-              hintText: 'Enter your Username',
+              hintText: 'Username',
               hintStyle: loginHintTextStyle,
             ),
           ),
@@ -134,23 +136,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Password',
-          style: loginLabelStyle,
-        ),
-        SizedBox(height: SizeConfig.heightFactor * 10.0),
         Container(
           alignment: Alignment.centerLeft,
-          decoration: loginBoxDecorationStyle,
           height: SizeConfig.heightFactor * 60.0,
-          child: TextFormField(
+          child: TextField(
             keyboardType: TextInputType.emailAddress,
             enableSuggestions: false,
             autocorrect: false,
             controller: _passwordController,
             textInputAction: TextInputAction.done,
             focusNode: _passwordFocus,
-            onFieldSubmitted: (value) {
+            onSubmitted: (value) {
               _passwordFocus.unfocus();
               _onLoginPress();
             },
@@ -160,19 +156,28 @@ class _LoginScreenState extends State<LoginScreen> {
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
-              border: InputBorder.none,
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Theme.of(context).accentColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                )
+              ),
               contentPadding:
                   EdgeInsets.only(top: SizeConfig.heightFactor * 14.0),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Colors.white54,
+                color: Theme.of(context).accentColor,
               ),
-              hintText: 'Enter your Password',
+              hintText: 'Password',
               hintStyle: loginHintTextStyle,
               suffixIcon: IconButton(
                 icon: Icon(
                   passwordInvisible ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.white54,
+                  color: passwordInvisible ? Colors.white60 : Theme.of(context).accentColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -187,44 +192,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: SizeConfig.heightFactor * 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.black),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.amberAccent,
-              activeColor: Colors.black,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: loginLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildLoginBtn() {
     return Container(
-        padding: EdgeInsets.symmetric(vertical: SizeConfig.heightFactor * 25.0),
         width: double.infinity,
-        child: RaisedButton(
-          elevation: SizeConfig.widthFactor * 5.0,
-          padding: EdgeInsets.all(SizeConfig.aspectRation * 15.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.aspectRation * 30.0),
-          ),
-          color: Colors.amber,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Theme.of(context).primaryColor,
+            elevation: SizeConfig.widthFactor*5,
+            padding: EdgeInsets.all(SizeConfig.aspectRation * 15.0),
+              shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                  )
+              ),
           child: Text(
             'LOGIN',
             style: TextStyle(
@@ -239,22 +218,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
-  Widget _buildFromText() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 60),
-      child: Text(
-        'From',
-        style: loginLabelStyle,
-      ),
-    );
-  }
-
   Widget _buildSignInWithLogo() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Image.asset(
         'assets/images/amfoss.png',
-        width: SizeConfig.screenWidth / 2.5,
+        width: SizeConfig.screenWidth / 3,
         alignment: Alignment.bottomCenter,
       ),
     );
@@ -262,8 +231,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLogoCMS() {
     return Image.asset(
-      'assets/images/cms.jpg',
-      width: SizeConfig.screenWidth / 1.5,
+      'assets/images/cms.png',
+      width: SizeConfig.screenWidth / 2,
       alignment: Alignment.topCenter,
     );
   }
@@ -290,16 +259,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      //use amfoss api later to fetch a custom image1
+                        'https://images.unsplash.com/photo-1485841938031-1bf81239b815?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=614&q=80'
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black,
-                      Colors.black,
-                      Colors.black,
-                      Colors.black,
+                      Color(0x00000000),
+                      Color(0xff000000)
                     ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
+                    stops: [0.1,0.40],
                   ),
                 ),
               ),
@@ -309,27 +289,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 height: double.infinity,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    SizedBox(height: SizeConfig.heightFactor * 110.0),
                     _buildLogoCMS(),
-                    SizedBox(height: SizeConfig.heightFactor * 30.0),
+                    SizedBox(height: SizeConfig.heightFactor * 145.0),
                     _buildEmailTF(),
                     SizedBox(
-                      height: SizeConfig.heightFactor * 30.0,
+                      height: SizeConfig.heightFactor * 8.0,
                     ),
                     _buildPasswordTF(),
-                    // TODO: Implement remember me
-                    // _buildRememberMeCheckbox(),
                     SizedBox(
-                      height: SizeConfig.heightFactor * 30,
+                      height: SizeConfig.heightFactor * 40,
                     ),
                     _buildLoginBtn(),
                   ],
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: _buildFromText(),
               ),
               Align(
                 alignment: Alignment.bottomCenter,

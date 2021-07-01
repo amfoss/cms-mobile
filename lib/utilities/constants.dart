@@ -74,7 +74,7 @@ final loginBoxDecorationStyle = BoxDecoration(
 );
 
 final loginHintTextStyle = TextStyle(
-  color: Colors.white54,
+  color: Colors.white60,
   fontFamily: 'OpenSans',
 );
 

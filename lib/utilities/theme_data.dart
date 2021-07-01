@@ -5,12 +5,14 @@ class Styles {
     if (isDarkTheme) {
       return ThemeData(
         brightness: Brightness.dark,
-        accentColor: Colors.amber
+        primaryColor: Color(0xffffa635),
+        accentColor: Colors.amber[300],
       );
     } else {
       return ThemeData(
           brightness: Brightness.light,
-          accentColor: Colors.amberAccent
+          primaryColor: Color(0xffffa635),
+          accentColor: Colors.amber[300],
       );
     }
   }
