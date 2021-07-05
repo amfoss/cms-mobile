@@ -35,6 +35,9 @@ dependencies:
   toast: ^0.1.5
   provider: ^4.0.5
   shared_preferences: 0.5.7
+  image_stack: ^2.0.1
+  percent_indicator: ^3.0.1
+  google_fonts: ^1.1.2
 
 dev_dependencies:
   flutter_test:
