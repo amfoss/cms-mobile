@@ -1,6 +1,7 @@
 import 'package:cms_mobile/screens/statusUpdate/messages.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MembersSent extends StatefulWidget {
@@ -62,7 +63,7 @@ class MembersSentTab extends State<MembersSent> {
           }
           return ListTile(
             leading: new CircleAvatar(
-              radius: 30,
+              radius: 25,
               backgroundColor: Colors.grey,
               backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
                   url,
@@ -70,9 +71,17 @@ class MembersSentTab extends State<MembersSent> {
                       ['profilePic'])),
             ),
             title: Text(
-                membersSentList['membersSent'][index]['member']['fullName']),
+                membersSentList['membersSent'][index]['member']['fullName'],
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+            )
+              ,),
             subtitle: Text("@" +
-                membersSentList['membersSent'][index]['member']['username']),
+                membersSentList['membersSent'][index]['member']['username'],
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                )),
+
             onTap: () {
               Navigator.push(
                   context,

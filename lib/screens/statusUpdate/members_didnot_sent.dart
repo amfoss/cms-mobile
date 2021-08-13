@@ -1,5 +1,6 @@
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MembersDidNotSend extends StatefulWidget {
@@ -67,7 +68,7 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
           }
           return ListTile(
             leading: new CircleAvatar(
-              radius: 30,
+              radius: 25,
               backgroundColor: Colors.grey,
               backgroundImage: NetworkImage(ImageAddressProvider.imageAddress(
                   url,
@@ -75,10 +76,16 @@ class MemberDidNotSendTab extends State<MembersDidNotSend> {
                       ['profile']['profilePic'])),
             ),
             title: Text(membersDidNotSentList['memberDidNotSend'][index]
-                ['member']['fullName']),
+                ['member']['fullName'],
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                )),
             subtitle: Text("@" +
                 membersDidNotSentList['memberDidNotSend'][index]['member']
-                    ['username']),
+                    ['username'],
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                )),
           );
         },
         separatorBuilder: (context, index) => Divider());

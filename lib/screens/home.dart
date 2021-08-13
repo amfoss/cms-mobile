@@ -1,4 +1,5 @@
 import 'package:cms_mobile/screens/profile/profile.dart';
+import 'package:cms_mobile/screens/statusUpdate/status_update.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:cms_mobile/utilities/indicator.dart';
@@ -317,8 +318,8 @@ class HomePageScreen extends State<HomePage> {
                 SizedBox(
                   height:20,
                 ),
-                _buildCard("Members Sent", memberSent, profilePicSent, sent, 0, Colors.amber),
-                _buildCard("Members Not Sent", memberNotSent, profilePicNotSent, notSent, 1, Colors.deepOrangeAccent),
+                _buildCard("Members Sent", memberSent, profilePicSent, sent, 0, Colors.amber, 0),
+                _buildCard("Members Not Sent", memberNotSent, profilePicNotSent, notSent, 1, Colors.deepOrangeAccent,1),
               ],
             ),
           ),
@@ -327,68 +328,80 @@ class HomePageScreen extends State<HomePage> {
       );
   }
 
-  Widget _buildCard(String title, dynamic members, List profilePic, dynamic count, int identifier, dynamic color){
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      color: getTheme(context) ? Colors.grey[800] : Colors.white,
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[Align(
-                child: RichText(
+  Widget _buildCard(String title, dynamic members, List profilePic, dynamic count, int identifier, dynamic color, int index){
+    return InkWell(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => StatusUpdate(
+            appUsername: widget.username,
+            url: widget.url,
+            index: index,
+          ))
+        )
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        color: getTheme(context) ? Colors.grey[800] : Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[Align(
+                  child: RichText(
+                      text: TextSpan(
+                          text: title,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            color: getTheme(context) ? Colors.white : Colors.black,
+                          )
+                      )),
+                ),
+                  SizedBox(height: 10,),
+                  RichText(
+                    textAlign: TextAlign.start,
                     text: TextSpan(
-                        text: title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          color: getTheme(context) ? Colors.white : Colors.black,
+                        text: "Count: ${members.length}",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: getTheme(context) ? Colors.white : Colors.black,
                         )
-                    )),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Padding(
+                    padding: EdgeInsets.only(left: 80),
+                    child: ImageStack(
+                      imageList: profilePic,
+                      totalCount: members.length,
+                      imageBorderColor: getTheme(context) ? Colors.black: Colors.white,
+                      imageRadius: 35,
+                      imageCount: 4,
+                      imageBorderWidth: 1,
+                    ),
+                  )
+                ],
               ),
-                SizedBox(height: 10,),
-                RichText(
-                  textAlign: TextAlign.start,
-                  text: TextSpan(
-                      text: "Count: ${members.length}",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: getTheme(context) ? Colors.white : Colors.black,
-                      )
+              SizedBox(width: 90,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularPercentIndicator(
+                    radius: 60.0,
+                    lineWidth: 5.0,
+                    percent: count.floor()/100,
+                    center: new Text("${identifier == 0 ? count.floor() : count.ceil()}%"),
+                    progressColor: color,
                   ),
-                ),
-                SizedBox(height: 10,),
-                Padding(
-                  padding: EdgeInsets.only(left: 80),
-                  child: ImageStack(
-                    imageList: profilePic,
-                    totalCount: members.length,
-                    imageBorderColor: getTheme(context) ? Colors.black: Colors.white,
-                    imageRadius: 35,
-                    imageCount: 4,
-                    imageBorderWidth: 1,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(width: 90,),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircularPercentIndicator(
-                  radius: 60.0,
-                  lineWidth: 5.0,
-                  percent: count.floor()/100,
-                  center: new Text("${identifier == 0 ? count.floor() : count.ceil()}%"),
-                  progressColor: color,
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
