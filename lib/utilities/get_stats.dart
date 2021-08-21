@@ -92,3 +92,11 @@ List<double> getMonthAvg(dailyLog){
   }
   return monthAvg;
 }
+
+List<String> getProfilePic(url, list){
+  List<String> temp = [];
+  for(int i=0; i< 5;i++){
+    temp.add(url + list[i]['member']['profile']['profilePic']);
+  }
+  return temp;
+}

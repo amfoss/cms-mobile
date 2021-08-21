@@ -1,6 +1,7 @@
 import 'package:cms_mobile/screens/profile/profile.dart';
 import 'package:cms_mobile/screens/statusUpdate/status_update.dart';
 import 'package:cms_mobile/utilities/constants.dart';
+import 'package:cms_mobile/utilities/get_stats.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
 import 'package:cms_mobile/utilities/indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -101,6 +102,8 @@ class HomePageScreen extends State<HomePage> {
     final sent = memberSent.length/total * 100;
     final notSent = memberNotSent.length/total * 100;
     final url = "https://api.amfoss.in/";
+    List<String> profilePicSent;
+    List<String> profilePicNotSent;
     List<PieChartSectionData> showingSections() {
       return List.generate(
           2,
@@ -136,20 +139,18 @@ class HomePageScreen extends State<HomePage> {
                 }
               });
     }
-    List<String> profilePicSent= [
-      url + memberSent[0]['member']['profile']['profilePic'],
-      url + memberSent[1]['member']['profile']['profilePic'],
-      url + memberSent[2]['member']['profile']['profilePic'],
-      url + memberSent[3]['member']['profile']['profilePic'],
-      url + memberSent[4]['member']['profile']['profilePic'],
-    ];
-    List<String> profilePicNotSent= [
-      url + memberNotSent[0]['member']['profile']['profilePic'],
-      url + memberNotSent[1]['member']['profile']['profilePic'],
-      url+ memberNotSent[2]['member']['profile']['profilePic'],
-      url + memberNotSent[3]['member']['profile']['profilePic'],
-      url + memberNotSent[4]['member']['profile']['profilePic'],
-    ];
+    if(!memberSent.isEmpty){
+      profilePicSent= getProfilePic(url, memberSent);
+    }else{
+      profilePicSent = [];
+    }
+
+    if(!memberNotSent.isEmpty){
+      profilePicNotSent= getProfilePic(url, memberNotSent);
+    }else{
+      profilePicNotSent = [];
+    }
+
     print(profilePicSent);
     GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
