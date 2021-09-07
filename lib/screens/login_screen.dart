@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         result = await _client.mutate(MutationOptions(document: authMutation));
         token = result.data['tokenAuth']['token'];
         userExist = true;
-      }on NoSuchMethodError catch(e){
+      } on NoSuchMethodError catch (e) {
         print(e);
       }
 
@@ -63,12 +63,15 @@ class _LoginScreenState extends State<LoginScreen> {
       final Link link = authLink.concat(httpLink);
       refreshCred = _usernameController.text + " " + _passwordController.text;
 
-      User user = User(authToken: token, username: _usernameController.text, refreshToken: refreshCred);
+      User user = User(
+          authToken: token,
+          username: _usernameController.text,
+          refreshToken: refreshCred);
       db.getSingleUser().then((userFromDb) {
-        if(!userExist){
+        if (!userExist) {
           Toast.show("Invalid username or password", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        }else if (userFromDb == null)
+        } else if (userFromDb == null)
           db.insertUser(user).then((onValue) {
             Navigator.pushReplacement(
               context,
@@ -99,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _usernameController,
             textInputAction: TextInputAction.next,
             focusNode: _usernameFocus,
+            autofillHints: [AutofillHints.username],
             onSubmitted: (term) {
               _fieldFocusChange(context, _usernameFocus, _passwordFocus);
             },
@@ -146,6 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: _passwordController,
             textInputAction: TextInputAction.done,
             focusNode: _passwordFocus,
+            autofillHints: [AutofillHints.password],
+            onEditingComplete: () => TextInput.finishAutofillContext(),
             onSubmitted: (value) {
               _passwordFocus.unfocus();
               _onLoginPress();
@@ -192,6 +198,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget _buildEmailPasswordTF(SizedBox sizedBox) {
+    return AutofillGroup(
+      child: Column(
+        children: [
+          _buildEmailTF(),
+          sizedBox,
+          _buildPasswordTF(),
+        ],
+      ),
+    );
+  }
+  
   Widget _buildLoginBtn() {
     return Container(
         width: double.infinity,
@@ -294,14 +312,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: SizeConfig.heightFactor * 110.0),
                     _buildLogoCMS(),
                     SizedBox(height: SizeConfig.heightFactor * 145.0),
-                    _buildEmailTF(),
-                    SizedBox(
-                      height: SizeConfig.heightFactor * 8.0,
+                    _buildEmailPasswordTF(
+                      SizedBox(height: SizeConfig.heightFactor * 8.0),
                     ),
-                    _buildPasswordTF(),
-                    SizedBox(
-                      height: SizeConfig.heightFactor * 40,
-                    ),
+                    SizedBox(height: SizeConfig.heightFactor * 40),
                     _buildLoginBtn(),
                   ],
                 ),
