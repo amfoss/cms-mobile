@@ -6,17 +6,22 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MembersSent extends StatefulWidget {
   final String slectedDate;
+  final Link url;
 
-  const MembersSent(this.slectedDate);
+  const MembersSent(this.slectedDate, this.url);
 
   @override
-  MembersSentTab createState() => MembersSentTab(slectedDate);
+  MembersSentTab createState() => MembersSentTab(slectedDate, url);
 }
 
 class MembersSentTab extends State<MembersSent> {
   String selctedDate;
+  Link url;
 
-  MembersSentTab(this.selctedDate);
+  MembersSentTab(String selctedDate, Link url){
+    this.selctedDate = selctedDate;
+    this.url = url;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +94,7 @@ class MembersSentTab extends State<MembersSent> {
                       builder: (context) => Messages(
                           selctedDate,
                           membersSentList['membersSent'][index]['member']
-                              ['username'])));
+                              ['username'], widget.url)));
             },
           );
         },

@@ -260,7 +260,7 @@ class _StatusUpdateScreen extends State<StatusUpdate>
               controller: _tabController,
               children: [
                 // first tab bar view widget
-                membersSent.MembersSent(DateFormat("yyyy-MM-dd").format(pickedDate)),
+                membersSent.MembersSent(DateFormat("yyyy-MM-dd").format(pickedDate),widget.url),
                 // second tab bar view widget
                 memberDidNotSend.MembersDidNotSend(DateFormat("yyyy-MM-dd").format(pickedDate))
               ],

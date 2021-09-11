@@ -1,7 +1,5 @@
-import 'package:cms_mobile/screens/home.dart';
 import 'package:cms_mobile/utilities/constants.dart';
 import 'package:cms_mobile/utilities/image_address.dart';
-import 'package:cms_mobile/utilities/sizeconfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -13,10 +11,12 @@ import 'package:intl/intl.dart';
 class Messages extends StatefulWidget {
   String selectedDate;
   String username;
+  Link url;
 
-  Messages(String selectedDate, String username) {
+  Messages(String selectedDate, String username, Link url) {
     this.selectedDate = selectedDate;
     this.username = username;
+    this.url = url;
   }
 
   @override
@@ -37,7 +37,7 @@ class MessagesTab extends State<Messages> {
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<GraphQLClient> client = ValueNotifier<GraphQLClient>(
-      GraphQLClient(link: HomePageScreen.url, cache: InMemoryCache()),
+      GraphQLClient(link: widget.url, cache: InMemoryCache()),
     );
 
     return GraphQLProvider(
@@ -75,10 +75,6 @@ class MessagesTab extends State<Messages> {
         },
         child: Scaffold(
           key: _scaffoldKey,
-          appBar: AppBar(
-            backgroundColor: appPrimaryColor,
-            title: Text("Status update message"),
-          ),
           body: Query(
             options: QueryOptions(documentNode: gql(_buildQuery())),
             builder: (QueryResult result,
@@ -98,8 +94,6 @@ class MessagesTab extends State<Messages> {
                   child: Text('No status updates for this date'),
                 );
               }
-              print(selectedDate);
-              print(result.data['getMemberStatusUpdates'][0]['member']);
               return _membersSentList(result);
             },
           ),
@@ -110,63 +104,99 @@ class MessagesTab extends State<Messages> {
 
   Widget _membersSentList(QueryResult result) {
     final messagesList = result.data['getMemberStatusUpdates'];
-    return Column(
-      children: <Widget>[
-        SizedBox(height: SizeConfig.heightFactor * 20),
-        ListView.builder(
-            shrinkWrap: true,
-            itemCount: messagesList.length,
-            itemBuilder: (context, index) {
-              String url =
-                  messagesList[index]['member']['avatar']['githubUsername'];
-              if (url == null) {
-                url = 'github';
-              }
-              return ListTile(
-                leading: new CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(
-                      ImageAddressProvider.imageAddress(
-                          url,
-                          messagesList[index]['member']['profile']
-                              ['profilePic'])),
-                ),
-                title:
-                    Text(messagesList[index]['member']['fullName'].toString()),
-                subtitle: Text("Date: " +
-                    selectedDate +
-                    "\n" +
-                    "Time: " +
-                    getDate(messagesList[index]['timestamp'])),
-              );
-            }),
-        SizedBox(
-          height: SizeConfig.heightFactor * 40,
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Align(
-                alignment: Alignment.topLeft,
+    final df = new DateFormat('dd-MMM-yyyy');
+    DateTime date = new DateFormat("yyyy-MM-dd").parse(selectedDate);
+    String url =
+    messagesList[0]['member']['avatar']['githubUsername'];
+    if (url == null) {
+      url = 'github';
+    }
+    return Scaffold(
+      body: Material(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: getTheme(context) ? Colors.grey[900] :Color.fromRGBO(0, 26, 51, 10),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 40),
                 child: Column(
-                  children: <Widget>[
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Message: ",
-                          style: messageLabelStyle,
-                        )),
-                    SizedBox(
-                      height: SizeConfig.heightFactor * 15,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {Navigator.of(context).pop();},
+                          icon: Icon(Icons.arrow_back,color: Colors.white,),
+                        ),
+                        Text("$username",
+                        style: TextStyle(
+                          fontSize: 18,
+                            color: Colors.white,
+                        ),),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.info_outline,color: Colors.white),
+                        ),
+                      ],
                     ),
-                    MarkdownBody(
-                        data: html2md.convert(messagesList[0]['message']))
+                    Divider(
+                      height: 10,
+                      indent: 30,
+                      endIndent: 30,
+                      color: Colors.grey[800],
+                    ),
+                    SizedBox(height: 15,),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: NetworkImage(
+                                  ImageAddressProvider.imageAddress(
+                                      url,
+                                      messagesList[0]['member']['profile']
+                                      ['profilePic'])),
+                            ),
+                            SizedBox(width: 20,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(messagesList[0]['member']['fullName'].toString(),
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white
+                                ),),
+                                Text("on: " + date.day.toString() + " " + df.format(date).substring(3,6),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey
+                                    )
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        Text(getDate(messagesList[0]['timestamp'],),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey
+                          ),)
+                      ],
+                    ),
+                    SizedBox(height: 20,)
                   ],
-                )),
+                ),
+              ),
+              displayMessage((messagesList[0]['message'])),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -175,10 +205,22 @@ class MessagesTab extends State<Messages> {
     super.initState();
   }
 
+  Widget displayMessage(String message){
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 40),
+      child: MarkdownBody(
+        data: html2md.convert(message).replaceAll('\\', '').replaceAll('*', '**').replaceAll(': **', ':** '),
+        styleSheet: MarkdownStyleSheet(
+          textScaleFactor: 1.15,
+        ),
+      ),
+    );
+  }
+
   String getDate(String date) {
     var dateTime = DateFormat("HH:mm:ss").parse(date.substring(11, 19), true);
     var dateLocal = dateTime.toLocal();
-    return dateLocal.toIso8601String().substring(11, 19);
+    return DateFormat('hh:mm a').format(dateLocal);
   }
 
   String _buildQuery() {
