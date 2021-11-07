@@ -349,6 +349,7 @@ class HomePageScreen extends State<HomePage> {
         child: Padding(
           padding: EdgeInsets.all(16),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,32 +375,49 @@ class HomePageScreen extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 10,),
-                  Padding(
-                    padding: EdgeInsets.only(left: 80),
-                    child: ImageStack(
-                      imageList: profilePic,
-                      totalCount: members.length,
-                      imageBorderColor: getTheme(context) ? Colors.black: Colors.white,
-                      imageRadius: 35,
-                      imageCount: 4,
-                      imageBorderWidth: 1,
-                    ),
+                  Row(
+                    children:<Widget> [
+                      Padding(
+                        padding: EdgeInsets.only(left: 110,right: 5),
+                        child: ImageStack(
+                          imageList: profilePic,
+                          totalCount: 5,
+                          imageBorderColor: getTheme(context) ? Colors.black: Colors.white,
+                          imageRadius: 35,
+                          imageCount: 5,
+                          imageBorderWidth: 1,
+                        ),
+                      ),
+                      RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                            text: members.length<=5?"":"+${members.length-5}",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: getTheme(context) ? Colors.white : Colors.black,
+                            )
+                        ),
+                      ),
+                    ]
                   )
                 ],
               ),
-              SizedBox(width: 90,),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularPercentIndicator(
-                    radius: 60.0,
-                    lineWidth: 5.0,
-                    percent: count.floor()/100,
-                    center: new Text("${identifier == 0 ? count.floor() : count.ceil()}%"),
-                    progressColor: color,
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularPercentIndicator(
+                      radius: 60.0,
+                      lineWidth: 5.0,
+                      percent: count.floor()/100,
+                      center: new Text("${identifier == 0 ? count.floor() : count.ceil()}%"),
+                      progressColor: color,
+                    ),
+                  ],
+                ),
               )
             ],
           ),
